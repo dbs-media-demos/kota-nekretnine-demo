@@ -1,0 +1,503 @@
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────────────────────────
+   Kota — design tokens
+   Limestone neutrals, Danube navy, one brass accent.
+   Sections switch palettes with .theme-*; components read the
+   semantic tokens (bg, fg, muted, line, surface, accent).
+   ──────────────────────────────────────────────────────────────── */
+
+:root {
+  --kreda: #f8f5f0;
+  --kamen: #eee8df;
+  --pescar: #d8cebf;
+  --mesing: #b8915a;
+  --mesing-ink: #7c5e2f;
+  --reka: #2e5470;
+  --dunav: #13283b;
+  --dunav-2: #0d1d2b;
+  --dunav-3: #1c3449;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --gutter: clamp(1rem, 3.4vw, 3.25rem);
+  --header-h: 4.75rem;
+}
+
+.theme-light {
+  --bg: var(--kamen);
+  --fg: var(--dunav);
+  --muted: #4a5663;
+  --line: color-mix(in oklab, var(--dunav) 16%, transparent);
+  --surface: var(--kreda);
+  --surface-2: #e5ddd1;
+  --accent: var(--mesing-ink);
+  --accent-fill: var(--mesing);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+.theme-chalk {
+  --bg: var(--kreda);
+  --fg: var(--dunav);
+  --muted: #4a5663;
+  --line: color-mix(in oklab, var(--dunav) 14%, transparent);
+  --surface: #ffffff;
+  --surface-2: var(--kamen);
+  --accent: var(--mesing-ink);
+  --accent-fill: var(--mesing);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+.theme-dark {
+  --bg: var(--dunav);
+  --fg: var(--kamen);
+  --muted: #b3b9bf;
+  --line: color-mix(in oklab, var(--kamen) 16%, transparent);
+  --surface: var(--dunav-3);
+  --surface-2: #23405a;
+  --accent: #d2ad73;
+  --accent-fill: var(--mesing);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+@theme inline {
+  --color-kreda: var(--kreda);
+  --color-kamen: var(--kamen);
+  --color-pescar: var(--pescar);
+  --color-mesing: var(--mesing);
+  --color-mesing-ink: var(--mesing-ink);
+  --color-reka: var(--reka);
+  --color-dunav: var(--dunav);
+  --color-dunav-2: var(--dunav-2);
+  --color-dunav-3: var(--dunav-3);
+
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-accent: var(--accent);
+  --color-accent-fill: var(--accent-fill);
+
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-bodoni), "Didot", Georgia, serif;
+  --font-mono: var(--font-plex), ui-monospace, monospace;
+
+  --ease-expo: var(--ease-out-expo);
+  --ease-quart: var(--ease-in-out-quart);
+}
+
+/* ─────────────────────────── base ─────────────────────────── */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--mesing);
+  color: var(--dunav);
+}
+
+:focus-visible {
+  outline: 2px solid var(--mesing);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img {
+  user-select: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ─────────────────────────── type ─────────────────────────── */
+
+.t-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(3.1rem, 10.5vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 96;
+}
+.t-h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variation-settings: "opsz" 96;
+}
+.t-h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 4.8vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variation-settings: "opsz" 72;
+}
+.t-h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  font-variation-settings: "opsz" 48;
+}
+.t-lead {
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  line-height: 1.55;
+}
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1;
+}
+.italic-accent {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ─────────────────────── above-the-fold intros (CSS only) ─────────────────────── */
+
+@keyframes heading-in {
+  from {
+    clip-path: inset(0 0 55% 0);
+    transform: translateY(0.35em);
+  }
+  to {
+    clip-path: inset(-12% -2% -22% -2%);
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0.12;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mask-open {
+  from {
+    clip-path: inset(9% 7% 9% 7%);
+    transform: scale(1.08);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+}
+@keyframes draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+.anim-heading {
+  animation: heading-in 1.35s var(--ease-out-expo) var(--d, 0s) both;
+}
+.anim-fade {
+  animation: fade-in 1.2s var(--ease-out-expo) calc(var(--d, 0s) + 0.1s) both;
+}
+.anim-mask {
+  animation: mask-open 1.8s var(--ease-out-expo) var(--d, 0s) both;
+}
+.anim-draw-x {
+  transform-origin: left center;
+  animation: draw-x 1.4s var(--ease-out-expo) var(--d, 0s) both;
+}
+.anim-draw-y {
+  transform-origin: center top;
+  animation: draw-y 1.4s var(--ease-out-expo) var(--d, 0s) both;
+}
+
+/* Hero line split, animated per line with CSS only */
+.hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.hero-line > span {
+  display: inline-block;
+  animation: line-up 1.4s var(--ease-out-expo) var(--d, 0s) both;
+}
+@keyframes line-up {
+  from {
+    transform: translateY(70%);
+    opacity: 0.15;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────── bits ─────────────────────────── */
+
+/* Architectural dimension line: |←—— 6.40 m ——→| */
+.dim {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: currentColor;
+}
+.dim::before,
+.dim::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.hairline {
+  border-color: var(--line);
+}
+
+.link-u {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s var(--ease-out-expo);
+}
+.link-u:hover,
+.link-u:focus-visible {
+  background-size: 100% 1px;
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee {
+  animation: marquee var(--marquee-d, 40s) linear infinite;
+}
+.marquee-host:hover .marquee {
+  animation-play-state: paused;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, currentColor 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, currentColor 0%, transparent);
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Paper grain over photos keeps the grade consistent */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Range inputs (price slider, calculator) */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  width: 100%;
+  height: 44px;
+  cursor: pointer;
+}
+.range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--line);
+}
+.range::-moz-range-track {
+  height: 2px;
+  background: var(--line);
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -10px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 2px solid var(--fg);
+  transition: transform 0.3s var(--ease-out-expo);
+}
+.range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 2px solid var(--fg);
+}
+.range:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+/* Dual slider: two stacked ranges, only thumbs are interactive */
+.range-dual {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.range-dual::-webkit-slider-thumb {
+  pointer-events: auto;
+}
+.range-dual::-moz-range-thumb {
+  pointer-events: auto;
+}
+.range-dual::-webkit-slider-runnable-track {
+  background: transparent;
+}
+.range-dual::-moz-range-track {
+  background: transparent;
+}
+
+/* Form fields */
+.field {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.85rem 0;
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+  color: var(--fg);
+  transition: border-color 0.3s;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--fg);
+}
+.field::placeholder {
+  color: color-mix(in oklab, var(--fg) 45%, transparent);
+}
+.field[aria-invalid="true"] {
+  border-color: #a4342a;
+}
+
+/* Custom cursor (desktop only, JS adds .has-cursor) */
+.has-cursor,
+.has-cursor a,
+.has-cursor button {
+  cursor: none;
+}
+.has-cursor input,
+.has-cursor textarea,
+.has-cursor select {
+  cursor: auto;
+}
+
+/* ─────────────────────── view transitions ─────────────────────── */
+
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+::view-transition-group(.morph) {
+  animation-duration: 650ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(root) {
+  animation: 360ms var(--ease-in-out-quart) both page-out;
+}
+::view-transition-new(root) {
+  animation: 700ms var(--ease-out-expo) 120ms both page-in;
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-2vh);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(3vh);
+  }
+}
+
+/* ─────────────────────── reduced motion ─────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee {
+    animation: none !important;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+  }
+}
