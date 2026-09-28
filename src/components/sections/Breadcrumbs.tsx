@@ -10,11 +10,11 @@ export function Breadcrumbs({ items, className }: { items: Crumb[]; className?: 
   return (
     <>
       <nav aria-label="Breadcrumb" className={clsx("t-label", className)}>
-        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <ol className="flex min-w-0 items-center gap-x-2 whitespace-nowrap">
           {items.map((c, i) => {
             const last = i === items.length - 1;
             return (
-              <li key={c.url} className="flex items-center gap-2">
+              <li key={c.url} className={last ? "min-w-0 truncate" : "flex shrink-0 items-center gap-2"}>
                 {last ? (
                   <span aria-current="page">
                     {c.name}

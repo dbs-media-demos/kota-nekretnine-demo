@@ -29,7 +29,6 @@ export const plexMono = IBM_Plex_Mono({
   weight: ["400"],
   variable: "--font-plex",
   display: "swap",
-  preload: false,
 });
 
 export const fontVariables = `${bodoni.variable} ${hanken.variable} ${plexMono.variable}`;
