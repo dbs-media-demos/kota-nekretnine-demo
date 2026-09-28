@@ -12,7 +12,7 @@ export const bodoni = localFont({
   ],
   variable: "--font-bodoni",
   display: "swap",
-  fallback: ["Didot", "Bodoni 72", "Georgia", "serif"],
+  fallback: ["Didot", "Georgia", "serif"],
   adjustFontFallback: "Times New Roman",
 });
 
