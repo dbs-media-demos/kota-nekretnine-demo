@@ -4,7 +4,7 @@
 - Market / city: RS – Novi Sad
 - Languages: sr (Latin, at /) + en (at /en), localized slugs + hreflang
 - Live URL: https://kota-nekretnine-demo.vercel.app
-- Repo: local only (git initialised; waiting for the GitHub org/account to push to)
+- Repo: https://github.com/dbs-media-demos/kota-nekretnine-demo (public, branch main)
 - Folder: DBS Media Portfolio/Demo Websites/real-estate
 - Stack: Next.js 16.3.6, React 19.2.8, Tailwind v4, GSAP 3 (ScrollTrigger, SplitText, Flip), Lenis
 - Palette: #F8F5F0 Kreda, #EEE8DF Kamen, #D8CEBF Peščar, #B8915A Mesing (#7C5E2F brass text), #2E5470 Reka, #13283B Dunav
