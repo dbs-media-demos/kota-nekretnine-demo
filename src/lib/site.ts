@@ -1,7 +1,11 @@
 /**
  * Business facts for the fictional agency. Everything here is invented for the
- * DBS Media concept site; the phone number is an obvious placeholder.
+ * Scale by Noon concept site; the phone number is an obvious placeholder.
  */
+/** The agency that built this concept site. Single source for every credit link. */
+export const agencyName = "Scale by Noon";
+export const agencyUrl = "https://scale-by-noon.vercel.app";
+
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://kota-nekretnine-demo.vercel.app").replace(/\/$/, "");
 
 /** Demos stay out of search engines unless explicitly switched on. */

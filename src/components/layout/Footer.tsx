@@ -5,7 +5,7 @@ import { DimLine } from "@/components/ui/Reveal";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { Locale } from "@/lib/i18n";
 import { pageHref, detailHref } from "@/lib/routes";
-import { hours, site } from "@/lib/site";
+import { agencyUrl, hours, site } from "@/lib/site";
 import { guidedHoods } from "@/content/neighbourhoods";
 import { OpenStatus } from "./OpenStatus";
 
@@ -120,7 +120,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             <Link href={pageHref(locale, "privacy")} className="link-u">
               {locale === "sr" ? "Privatnost" : "Privacy"}
             </Link>
-            <a href="https://dbs-media.com" target="_blank" rel="noopener" className="link-u text-kamen">
+            <a href={agencyUrl} target="_blank" rel="noopener" className="link-u text-kamen">
               {dict.footer.credit}
             </a>
           </div>

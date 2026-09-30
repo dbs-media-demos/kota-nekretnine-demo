@@ -132,8 +132,8 @@ export const privacyPage = {
     {
       h: L("Ko smo", "Who we are"),
       p: L(
-        "Rukovalac podacima je Kota nekretnine d.o.o., Ulica Modene 3, 21000 Novi Sad (izmišljeno preduzeće; ovo je koncept sajt DBS Media). Za sva pitanja pišite na zdravo@kota-nekretnine.rs.",
-        "The data controller is Kota nekretnine d.o.o., 3 Modene Street, 21000 Novi Sad (a fictional company; this is a DBS Media concept site). For any question, write to zdravo@kota-nekretnine.rs.",
+        "Rukovalac podacima je Kota nekretnine d.o.o., Ulica Modene 3, 21000 Novi Sad (izmišljeno preduzeće; ovo je koncept sajt Scale by Noon). Za sva pitanja pišite na zdravo@kota-nekretnine.rs.",
+        "The data controller is Kota nekretnine d.o.o., 3 Modene Street, 21000 Novi Sad (a fictional company; this is a Scale by Noon concept site). For any question, write to zdravo@kota-nekretnine.rs.",
       ),
     },
     {
