@@ -1,6 +1,6 @@
 # Kota nekretnine (Scale by Noon demo)
 
-- Niche: Real estate agency         (matches scale-by-noon.vercel.app industry id: real-estate)
+- Niche: Real estate agency         (matches www.scalebynoon.com industry id: real-estate)
 - Market / city: RS – Novi Sad
 - Languages: sr (Latin, at /) + en (at /en), localized slugs + hreflang
 - Live URL: https://kota-nekretnine-demo.vercel.app

@@ -4,7 +4,7 @@
  */
 /** The agency that built this concept site. Single source for every credit link. */
 export const agencyName = "Scale by Noon";
-export const agencyUrl = "https://scale-by-noon.vercel.app";
+export const agencyUrl = "https://www.scalebynoon.com";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://kota-nekretnine-demo.vercel.app").replace(/\/$/, "");
 
