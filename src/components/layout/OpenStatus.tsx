@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { hours, site } from "@/lib/site";
 import type { Dictionary } from "@/i18n/dictionary";
+import { useBiz } from "@/components/preview/BizContext";
+import { openStatus } from "@/lib/biz-core";
 
 type Status = { open: boolean; text: string };
 
@@ -46,14 +48,17 @@ export function computeStatus(dict: Dictionary): Status {
 
 /** Live "Open now / Closes at 19:00" badge. Renders a neutral placeholder on the server. */
 export function OpenStatus({ dict, className }: { dict: Dictionary; className?: string }) {
+  const biz = useBiz();
   const [status, setStatus] = useState<Status | null>(null);
 
   useEffect(() => {
-    const update = () => setStatus(computeStatus(dict));
+    const update = () => setStatus(biz.preview ? openStatus(biz) : computeStatus(dict));
     update();
     const id = window.setInterval(update, 60_000);
     return () => window.clearInterval(id);
-  }, [dict]);
+  }, [dict, biz]);
+
+  if (biz.preview && !biz.hours) return null;
 
   return (
     <span className={clsx("inline-flex items-center gap-2", className)} aria-live="polite">

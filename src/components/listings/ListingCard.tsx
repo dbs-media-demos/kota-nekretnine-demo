@@ -23,6 +23,8 @@ type Props = {
   /** Participates in the card → gallery morph. Only one card per id on a page may set this. */
   morph?: boolean;
   priority?: boolean;
+  /** A preview's area, shown instead of the Novi Sad neighbourhood. */
+  place?: string;
 };
 
 export function priceLabel(l: Listing, locale: Locale, dict: Dictionary) {
@@ -36,7 +38,7 @@ export function metaLine(l: Listing, locale: Locale, dict: Dictionary) {
   return parts.join(" · ");
 }
 
-export function ListingCard({ listing: l, locale, dict, sizes = "(min-width: 1024px) 30vw, 90vw", aspect = "tall", className, active, onHover, morph = true, priority }: Props) {
+export function ListingCard({ listing: l, locale, dict, sizes = "(min-width: 1024px) 30vw, 90vw", aspect = "tall", className, active, onHover, morph = true, priority, place }: Props) {
   const hood = hoodById(l.hood);
   const href = detailHref(locale, "listings", l.slug);
   const frame = (
@@ -100,7 +102,7 @@ export function ListingCard({ listing: l, locale, dict, sizes = "(min-width: 102
         </div>
         <div className="mt-4 flex items-baseline justify-between gap-4">
           <p className="t-label text-muted">
-            {hood.name[locale]} · {dict.type[l.type]}
+            {place ?? hood.name[locale]} · {dict.type[l.type]}
           </p>
           <p className="t-mono shrink-0 text-[1.02rem]">{priceLabel(l, locale, dict)}</p>
         </div>

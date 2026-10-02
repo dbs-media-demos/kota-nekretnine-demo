@@ -8,10 +8,10 @@ import type { Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/i18n/dictionary";
 import { gsap, useGSAP } from "@/lib/gsap";
 
-type Props = { locale: Locale; dict: Dictionary; items: Listing[]; label: string; title: string; allLabel: string; allHref: string };
+type Props = { locale: Locale; dict: Dictionary; items: Listing[]; label: string; title: string; allLabel: string; allHref: string; place?: string };
 
 /** Horizontal gallery that scrolls sideways while the section is pinned (desktop); swipeable on phones. */
-export function FeaturedRail({ locale, dict, items, label, title, allLabel, allHref }: Props) {
+export function FeaturedRail({ locale, dict, items, label, title, allLabel, allHref, place }: Props) {
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
 
@@ -64,7 +64,7 @@ export function FeaturedRail({ locale, dict, items, label, title, allLabel, allH
         </div>
         {items.map((l, i) => (
           <div key={l.id} data-card className="w-[78vw] shrink-0 snap-start sm:w-[44vw] lg:w-[24vw]">
-            <ListingCard listing={l} locale={locale} dict={dict} sizes="(min-width: 1024px) 24vw, 78vw" priority={false} morph={i < 6} />
+            <ListingCard listing={l} locale={locale} dict={dict} sizes="(min-width: 1024px) 24vw, 78vw" priority={false} morph={i < 6} place={place} />
           </div>
         ))}
         <Link

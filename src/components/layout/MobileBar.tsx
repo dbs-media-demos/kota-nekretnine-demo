@@ -1,12 +1,15 @@
+"use client";
+
 import Link from "next/link";
-import { site } from "@/lib/site";
+import { useBiz } from "@/components/preview/BizContext";
 
 /** Phone-only action bar: call + book a viewing, always one thumb away. */
 export function MobileBar({ callLabel, bookLabel, bookHref }: { callLabel: string; bookLabel: string; bookHref: string }) {
+  const biz = useBiz();
   return (
     <div className="fixed inset-x-0 bottom-0 z-[180] grid grid-cols-2 gap-2 border-t border-dunav/10 bg-kreda/92 p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden">
       <a
-        href={`tel:${site.phone}`}
+        href={`tel:${biz.phone}`}
         className="flex min-h-12 items-center justify-center gap-2 rounded-full border border-dunav/25 text-[0.95rem] font-medium text-dunav"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">

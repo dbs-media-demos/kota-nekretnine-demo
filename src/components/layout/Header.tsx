@@ -10,6 +10,7 @@ import type { Dictionary } from "@/i18n/dictionary";
 import type { Locale } from "@/lib/i18n";
 import { kota } from "@/lib/format";
 import { site } from "@/lib/site";
+import { useBiz } from "@/components/preview/BizContext";
 
 export type NavLink = { key: string; label: string; href: string; image: string };
 
@@ -25,6 +26,7 @@ type Props = {
 };
 
 export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap, otherHome }: Props) {
+  const biz = useBiz();
   const pathname = usePathname();
   const [onDark, setOnDark] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -133,7 +135,7 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
         )}
       >
         <div className="wrap flex h-[var(--header-h)] items-center justify-between gap-6">
-          <Link href={homeHref} className="relative z-10 text-[1.35rem]" aria-label={`${site.nameLocalized[locale]}, ${dict.nav.home}`}>
+          <Link href={homeHref} className="relative z-10 text-[1.35rem]" aria-label={`${biz.preview ? biz.name : site.nameLocalized[locale]}, ${dict.nav.home}`}>
             <Logo />
           </Link>
 
@@ -255,15 +257,15 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
               ))}
             </div>
             <div className="grid gap-2 text-sm">
-              <a href={`tel:${site.phone}`} className="t-h3 hover:text-accent" tabIndex={open ? 0 : -1}>
-                {site.phoneDisplay}
+              <a href={`tel:${biz.phone}`} className="t-h3 hover:text-accent" tabIndex={open ? 0 : -1}>
+                {biz.phoneDisplay}
               </a>
-              <a href={`mailto:${site.email}`} className="link-u w-fit text-muted" tabIndex={open ? 0 : -1}>
-                {site.email}
-              </a>
-              <p className="text-muted">
-                {site.street}, {site.postalCode} {site.city}
-              </p>
+              {!biz.preview && (
+                <a href={`mailto:${site.email}`} className="link-u w-fit text-muted" tabIndex={open ? 0 : -1}>
+                  {site.email}
+                </a>
+              )}
+              <p className="text-muted">{biz.address.full}</p>
             </div>
           </div>
         </div>

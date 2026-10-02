@@ -8,8 +8,9 @@ import { pageHref, detailHref } from "@/lib/routes";
 import { agencyUrl, hours, site } from "@/lib/site";
 import { guidedHoods } from "@/content/neighbourhoods";
 import { OpenStatus } from "./OpenStatus";
+import { DAY_NAMES, dayRange, weekFromMonday, type Biz } from "@/lib/biz-core";
 
-export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary; biz?: Biz }) {
   const explore = (["listings", "hoods", "sell", "valuation", "about", "reviews", "faq", "contact"] as const).map((k) => ({
     label: dict.nav[k],
     href: pageHref(locale, k),
@@ -35,8 +36,8 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             <Button href={pageHref(locale, "contact")} variant="brass">
               {dict.cta.book}
             </Button>
-            <Button href={`tel:${site.phone}`} variant="outline">
-              {site.phoneDisplay}
+            <Button href={`tel:${biz ? biz.phone : site.phone}`} variant="outline">
+              {biz ? biz.phoneDisplay : site.phoneDisplay}
             </Button>
           </div>
         </div>
@@ -54,6 +55,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
               ))}
             </ul>
           </div>
+          {!biz && (
           <div>
             <p className="t-label mb-5 text-muted">{dict.nav.hoods}</p>
             <ul className="grid gap-2.5">
@@ -66,55 +68,83 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
               ))}
             </ul>
           </div>
+          )}
           <div>
             <p className="t-label mb-5 text-muted">{dict.footer.visit}</p>
             <address className="not-italic leading-relaxed">
-              {site.legalName}
-              <br />
-              {site.street}
-              <br />
-              {site.postalCode} {site.city}
+              {biz ? (
+                <>
+                  {biz.name}
+                  <br />
+                  {biz.address.full}
+                </>
+              ) : (
+                <>
+                  {site.legalName}
+                  <br />
+                  {site.street}
+                  <br />
+                  {site.postalCode} {site.city}
+                </>
+              )}
             </address>
             <OpenStatus dict={dict} className="mt-5" />
           </div>
           <div>
             <p className="t-label mb-5 text-muted">{dict.hoursLabel}</p>
             <dl className="t-mono grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
-              {[1, 2, 3, 4, 5, 6, 0].map((d) => {
-                const h = hours.find((x) => x.day === d);
-                return (
-                  <div key={d} className="contents">
-                    <dt className="text-muted">{dict.daysShort[d]}</dt>
-                    <dd>{h ? `${h.open}–${h.close}` : "—"}</dd>
-                  </div>
-                );
-              })}
+              {biz
+                ? weekFromMonday(biz.hours ?? []).map((h) => (
+                    <div key={h.day} className="contents">
+                      <dt className="text-muted">{DAY_NAMES[locale][h.day]}</dt>
+                      <dd>{dayRange(h, locale)}</dd>
+                    </div>
+                  ))
+                : [1, 2, 3, 4, 5, 6, 0].map((d) => {
+                    const h = hours.find((x) => x.day === d);
+                    return (
+                      <div key={d} className="contents">
+                        <dt className="text-muted">{dict.daysShort[d]}</dt>
+                        <dd>{h ? `${h.open}–${h.close}` : "—"}</dd>
+                      </div>
+                    );
+                  })}
             </dl>
-            <p className="mt-3 text-sm text-muted">{dict.sundayNote}</p>
+            {!biz && <p className="mt-3 text-sm text-muted">{dict.sundayNote}</p>}
             <div className="mt-6 grid gap-1.5 text-sm">
-              <a href={`tel:${site.phone}`} className="link-u w-fit">
-                {site.phoneDisplay}
+              <a href={`tel:${biz ? biz.phone : site.phone}`} className="link-u w-fit">
+                {biz ? biz.phoneDisplay : site.phoneDisplay}
               </a>
-              <a href={`mailto:${site.email}`} className="link-u w-fit">
-                {site.email}
-              </a>
+              {!biz && (
+                <a href={`mailto:${site.email}`} className="link-u w-fit">
+                  {site.email}
+                </a>
+              )}
             </div>
           </div>
         </div>
 
         <div className="relative select-none" aria-hidden="true">
-          <DimLine label="45°15′N · 19°50′E · Novi Sad" className="mb-4 text-muted" />
+          <DimLine label={biz ? biz.area : "45°15′N · 19°50′E · Novi Sad"} className="mb-4 text-muted" />
           <div className="flex items-end gap-[2vw] leading-none">
             <Mark className="w-[13vw] max-w-[220px] text-kamen" accent="var(--mesing)" />
-            <span className="font-serif text-[clamp(5rem,24vw,24rem)] leading-[0.75] tracking-[0.12em]" style={{ fontVariationSettings: '"opsz" 96' }}>
-              KOTA
-            </span>
+            {biz ? (
+              <span className="min-w-0 font-serif text-[clamp(2.6rem,8vw,8rem)] leading-[0.95] tracking-[0.04em] [overflow-wrap:anywhere]" style={{ fontVariationSettings: '"opsz" 96' }}>
+                {biz.shortName.toUpperCase()}
+              </span>
+            ) : (
+              <span className="font-serif text-[clamp(5rem,24vw,24rem)] leading-[0.75] tracking-[0.12em]" style={{ fontVariationSettings: '"opsz" 96' }}>
+                KOTA
+              </span>
+            )}
           </div>
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-muted md:flex-row md:items-center md:justify-between">
           <p>
-            © {year} {site.legalName}. {dict.footer.rights} {dict.footer.registry}: {site.registry}
+            {biz
+              ? `© ${year} ${biz.name}. Pregled početne strane napravljen za ${biz.name}.`
+              : `© ${year} ${site.legalName}. ${dict.footer.rights} ${dict.footer.registry}: ${site.registry}`}
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <Link href={pageHref(locale, "privacy")} className="link-u">

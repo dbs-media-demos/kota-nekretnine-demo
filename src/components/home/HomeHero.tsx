@@ -7,18 +7,19 @@ import type { Dictionary } from "@/i18n/dictionary";
 import type { Locale } from "@/lib/i18n";
 import { pageHref } from "@/lib/routes";
 import { kota } from "@/lib/format";
+import type { Biz } from "@/lib/biz-core";
 
 const d = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
 
 /** Above-the-fold hero. Everything here animates with CSS only, so LCP never waits for JS. */
-export function HomeHero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function HomeHero({ locale, dict, biz }: { locale: Locale; dict: Dictionary; biz?: Biz }) {
   const ticks = [0, 3.2, 6.4, 9.6, 12.4];
   return (
     <section data-header="dark" className="theme-dark relative h-[100svh] min-h-[660px] overflow-hidden" aria-labelledby="hero-title">
       <div className="anim-mask absolute inset-0" style={d(0)}>
         <Image
-          src="/images/city/hero-stari-grad-sunset.jpg"
-          alt={c.heroPhoto[locale]}
+          src={biz ? "/images/listings/l11/04.jpg" : "/images/city/hero-stari-grad-sunset.jpg"}
+          alt={biz ? "Krovna terasa sa pogledom na grad" : c.heroPhoto[locale]}
           fill
           preload
           quality={75}
@@ -27,6 +28,8 @@ export function HomeHero({ locale, dict }: { locale: Locale; dict: Dictionary })
         />
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,29,43,0.55)_0%,rgba(13,29,43,0.05)_32%,rgba(13,29,43,0.2)_55%,rgba(13,29,43,0.88)_100%)]" />
+      {/* The preview photo is brighter than the sunset, so it gets a little more shade */}
+      {biz && <div className="absolute inset-0 bg-dunav/30" />}
 
       {/* Elevation ruler */}
       <div className="absolute bottom-[22%] left-[var(--gutter)] top-[20%] hidden w-24 md:block" aria-hidden="true">
@@ -53,7 +56,7 @@ export function HomeHero({ locale, dict }: { locale: Locale; dict: Dictionary })
         <div className="grid items-end gap-10 lg:grid-cols-[1.35fr_1fr]">
           <div className="md:pl-28">
             <p className="anim-fade t-label mb-6 text-kamen/85" style={d(0.35)}>
-              {c.heroKicker[locale]}
+              {biz ? `Agencija za nekretnine · ${biz.area}` : c.heroKicker[locale]}
             </p>
             <h1 id="hero-title" className="t-display text-kreda">
               <span className="hero-line">
@@ -71,7 +74,10 @@ export function HomeHero({ locale, dict }: { locale: Locale; dict: Dictionary })
           </div>
 
           <div className="max-w-md lg:justify-self-end">
-            <p className="t-lead text-kamen/90">{c.heroLead[locale]}</p>
+            <p className="t-lead text-kamen/90">
+              {biz ? "Stanovi i kuće izmereni do centimetra, sa proverenim papirima i pravom cenom po kvadratu." : c.heroLead[locale]}
+            </p>
+            {!biz && (
             <form action={pageHref(locale, "listings")} method="get" className="mt-7 flex flex-wrap items-stretch gap-2" role="search" aria-label={c.quickSearch[locale]}>
               <label className="sr-only" htmlFor="qs-deal">
                 {dict.deal.sale}
@@ -105,6 +111,7 @@ export function HomeHero({ locale, dict }: { locale: Locale; dict: Dictionary })
                 {c.search[locale]}
               </button>
             </form>
+            )}
             <div className="mt-4 flex flex-wrap gap-2">
               <Button href={pageHref(locale, "valuation")} variant="outline" className="!min-h-11 !text-[0.88rem]">
                 {dict.cta.valuation}

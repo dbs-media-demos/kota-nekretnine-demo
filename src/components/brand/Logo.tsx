@@ -1,4 +1,7 @@
+"use client";
+
 import clsx from "clsx";
+import { useBiz } from "@/components/preview/BizContext";
 
 /**
  * The Kota mark: an architect's level symbol (▽ sitting on a datum line),
@@ -15,12 +18,16 @@ export function Mark({ className, accent = "currentColor" }: { className?: strin
 }
 
 export function Logo({ className, sub, accent }: { className?: string; sub?: string; accent?: string }) {
+  const biz = useBiz();
   return (
     <span className={clsx("inline-flex items-center gap-2.5 leading-none", className)}>
       <Mark className="h-[0.95em] w-auto shrink-0" accent={accent ?? "var(--mesing)"} />
       <span className="flex flex-col">
-        <span className="font-serif text-[1.05em] tracking-[0.26em]" style={{ fontVariationSettings: '"opsz" 24' }}>
-          KOTA
+        <span
+          className={clsx("font-serif text-[1.05em]", biz.preview ? "block max-w-[12rem] truncate pb-0.5 tracking-[0.12em] sm:max-w-[18rem]" : "tracking-[0.26em]")}
+          style={{ fontVariationSettings: '"opsz" 24' }}
+        >
+          {biz.preview ? biz.shortName.toUpperCase() : "KOTA"}
         </span>
         {sub && <span className="t-label mt-1 !text-[0.5em] !tracking-[0.3em] opacity-80">{sub}</span>}
       </span>
