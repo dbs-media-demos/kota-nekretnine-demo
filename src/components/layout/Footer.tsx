@@ -129,11 +129,11 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
           <div className="flex items-end gap-[2vw] leading-none">
             <Mark className="w-[13vw] max-w-[220px] text-kamen" accent="var(--mesing)" />
             {biz ? (
-              <span className="min-w-0 font-serif text-[clamp(2.6rem,8vw,8rem)] leading-[0.95] tracking-[0.04em] [overflow-wrap:anywhere]" style={{ fontVariationSettings: '"opsz" 96' }}>
+              <span className="min-w-0 font-serif text-[clamp(2.6rem,8vw,8rem)] leading-[0.95] tracking-[0.04em] [overflow-wrap:anywhere]">
                 {biz.shortName.toUpperCase()}
               </span>
             ) : (
-              <span className="font-serif text-[clamp(5rem,24vw,24rem)] leading-[0.75] tracking-[0.12em]" style={{ fontVariationSettings: '"opsz" 96' }}>
+              <span className="font-serif text-[clamp(5rem,24vw,24rem)] leading-[0.75] tracking-[0.12em]">
                 KOTA
               </span>
             )}

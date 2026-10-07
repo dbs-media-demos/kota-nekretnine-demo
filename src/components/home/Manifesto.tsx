@@ -19,7 +19,7 @@ export function Manifesto({ locale, biz }: { locale: Locale; biz?: Biz }) {
         <DimLine label={locale === "sr" ? "1 : 100" : "Scale 1 : 100"} className="mb-14 text-muted" />
         <ScrubWords
           text={c.manifesto[locale]}
-          className="font-serif text-[clamp(1.9rem,4.4vw,4.4rem)] leading-[1.08] tracking-[-0.02em] [font-variation-settings:'opsz'_72]"
+          className="font-serif text-[clamp(1.9rem,4.4vw,4.4rem)] leading-[1.08] tracking-[-0.02em]"
         />
         <dl className="mt-20 grid grid-cols-2 gap-x-6 gap-y-12 border-t border-line pt-12 md:grid-cols-4">
           {stats.map((s) => (

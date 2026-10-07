@@ -85,7 +85,7 @@
   --color-accent-fill: var(--accent-fill);
 
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-bodoni), "Didot", Georgia, serif;
+  --font-serif: var(--font-display-serif), Georgia, serif;
   --font-mono: var(--font-plex), ui-monospace, monospace;
 
   --ease-expo: var(--ease-out-expo);
@@ -135,35 +135,31 @@ img {
 
 .t-display {
   font-family: var(--font-serif);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(3.1rem, 10.5vw, 11rem);
   line-height: 0.9;
-  letter-spacing: -0.035em;
-  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.025em;
 }
 .t-h1 {
   font-family: var(--font-serif);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(2.6rem, 7vw, 7rem);
   line-height: 0.95;
-  letter-spacing: -0.03em;
-  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.02em;
 }
 .t-h2 {
   font-family: var(--font-serif);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(2.1rem, 4.8vw, 4.6rem);
   line-height: 1;
-  letter-spacing: -0.025em;
-  font-variation-settings: "opsz" 72;
+  letter-spacing: -0.015em;
 }
 .t-h3 {
   font-family: var(--font-serif);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(1.5rem, 2.4vw, 2.2rem);
   line-height: 1.1;
-  letter-spacing: -0.015em;
-  font-variation-settings: "opsz" 48;
+  letter-spacing: -0.01em;
 }
 .t-lead {
   font-size: clamp(1.1rem, 1.5vw, 1.35rem);

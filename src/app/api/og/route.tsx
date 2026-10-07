@@ -2,9 +2,9 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 
 // Brand fonts, read once. URLs relative to this file are traced into the deployment.
-const [bodoni, bodoniItalic, hanken, plex] = await Promise.all([
-  readFile(new URL("../../../assets/fonts/BodoniModa-96.ttf", import.meta.url)),
-  readFile(new URL("../../../assets/fonts/BodoniModa-96-Italic.ttf", import.meta.url)),
+const [serif, serifItalic, hanken, plex] = await Promise.all([
+  readFile(new URL("../../../assets/fonts/SourceSerif4-Display-500.ttf", import.meta.url)),
+  readFile(new URL("../../../assets/fonts/SourceSerif4-Display-500-Italic.ttf", import.meta.url)),
   readFile(new URL("../../../assets/fonts/Hanken-400.ttf", import.meta.url)),
   readFile(new URL("../../../assets/fonts/PlexMono-400.ttf", import.meta.url)),
 ]);
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
               <path d="M7 4h11v18Z" fill="#b8915a" />
               <path d="M0 22h40" stroke="#eee8df" strokeWidth="1.6" />
             </svg>
-            <div style={{ display: "flex", fontFamily: "Bodoni", fontSize: 40, letterSpacing: 10, color: "#eee8df" }}>KOTA</div>
+            <div style={{ display: "flex", fontFamily: "Serif", fontSize: 40, letterSpacing: 10, color: "#eee8df" }}>KOTA</div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 14, fontFamily: "Plex", fontSize: 20, letterSpacing: 4, color: "#d2ad73", textTransform: "uppercase" }}>
@@ -45,10 +45,10 @@ export async function GET(req: Request) {
               </svg>
               {eyebrow}
             </div>
-            <div style={{ display: "flex", fontFamily: "Bodoni", fontSize: size, lineHeight: 1.02, letterSpacing: -1.5, color: "#f8f5f0" }}>{title}</div>
+            <div style={{ display: "flex", fontFamily: "Serif", fontSize: size, lineHeight: 1.02, letterSpacing: -1.5, color: "#f8f5f0" }}>{title}</div>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", color: "rgba(238,232,223,0.72)", fontSize: 22 }}>
-            <div style={{ display: "flex", fontFamily: "BodoniItalic", fontSize: 30, color: "#eee8df" }}>
+            <div style={{ display: "flex", fontFamily: "SerifItalic", fontSize: 30, color: "#eee8df" }}>
               {sr ? "Dom na pravoj visini." : "A home at the right level."}
             </div>
             <div style={{ display: "flex", fontFamily: "Plex", fontSize: 18 }}>Novi Sad</div>
@@ -67,8 +67,8 @@ export async function GET(req: Request) {
       width: 1200,
       height: 630,
       fonts: [
-        { name: "Bodoni", data: bodoni, weight: 400, style: "normal" },
-        { name: "BodoniItalic", data: bodoniItalic, weight: 400, style: "normal" },
+        { name: "Serif", data: serif, weight: 500, style: "normal" },
+        { name: "SerifItalic", data: serifItalic, weight: 500, style: "normal" },
         { name: "Hanken", data: hanken, weight: 400, style: "normal" },
         { name: "Plex", data: plex, weight: 400, style: "normal" },
       ],

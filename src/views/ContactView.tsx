@@ -30,8 +30,8 @@ export function ContactView({ locale }: { locale: Locale }) {
       />
 
       <section className="theme-light pb-24 md:pb-32" data-header="light">
-        <div className="wrap grid gap-16 border-t border-line pt-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-          <div className="grid content-start gap-10">
+        <div className="wrap grid grid-cols-1 gap-16 border-t border-line pt-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+          <div className="grid min-w-0 grid-cols-1 content-start gap-10">
             <div>
               <p className="t-label text-muted">{c.office}</p>
               <address className="mt-4 not-italic">

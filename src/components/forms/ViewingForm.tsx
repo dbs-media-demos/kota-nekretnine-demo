@@ -125,9 +125,9 @@ export function ViewingForm({ locale, copy, subject }: { locale: Locale; copy: V
     ) : null;
 
   return (
-    <form onSubmit={submit} noValidate className="grid gap-7">
+    <form onSubmit={submit} noValidate className="grid grid-cols-1 gap-7">
       {subject && <input type="hidden" name="subject" value={subject} />}
-      <fieldset>
+      <fieldset className="min-w-0">
         <legend className="t-label mb-3 text-muted">{copy.day}</legend>
         <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1" data-err={errors.day ? true : undefined} tabIndex={errors.day ? -1 : undefined}>
           {days.length === 0 &&

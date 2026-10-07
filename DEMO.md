@@ -8,7 +8,8 @@
 - Folder: DBS Media Portfolio/Demo Websites/real-estate
 - Stack: Next.js 16.3.6, React 19.2.8, Tailwind v4, GSAP 3 (ScrollTrigger, SplitText, Flip), Lenis
 - Palette: #F8F5F0 Kreda, #EEE8DF Kamen, #D8CEBF Peščar, #B8915A Mesing (#7C5E2F brass text), #2E5470 Reka, #13283B Dunav
-  Fonts: Bodoni Moda (static opsz-96 cut, self-hosted), Hanken Grotesk, IBM Plex Mono
+  Fonts: Source Serif 4 (display serif: static opsz-60 / weight-500 cut + italic, self-hosted, subset to Latin + Serbian Latin, ~23 KB each),
+  Hanken Grotesk, IBM Plex Mono. Source Serif 4 replaced Bodoni Moda on 2026-10-07 because Bodoni's hairlines were too thin.
 - Pages: 66 statically generated pages (33 per language) + 404, sitemap, robots, manifest, dynamic OG images.
   Početna/Home, Nekretnine/Listings (+17 listing pages), Kraj po kraj/Neighbourhoods (+6 guides), Procena/Valuation,
   Prodajte sa nama/Sell with us, O nama/About, Utisci/Reviews, Česta pitanja/FAQ, Kontakt/Contact, Privatnost/Privacy

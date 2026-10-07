@@ -2,17 +2,19 @@ import localFont from "next/font/local";
 import { Hanken_Grotesk, IBM_Plex_Mono } from "next/font/google";
 
 /**
- * Display serif: Bodoni Moda, self-hosted as the static opsz-96 cut (the high-contrast
- * display instance). ~20 KB per style instead of the ~100 KB variable files.
+ * Display serif: Source Serif 4, self-hosted as a static instance at the display optical
+ * size (opsz 60) and weight 500, subset to Latin + Serbian Latin. ~23 KB per style instead
+ * of the ~400 KB+ variable files. (Replaced Bodoni Moda on 2026-10-07: its hairlines were too thin.)
  */
-export const bodoni = localFont({
+export const displaySerif = localFont({
   src: [
-    { path: "../assets/webfonts/BodoniModa-96.woff2", weight: "400", style: "normal" },
-    { path: "../assets/webfonts/BodoniModa-96-Italic.woff2", weight: "400", style: "italic" },
+    { path: "../assets/webfonts/SourceSerif4-Display-500.woff2", weight: "500", style: "normal" },
+    { path: "../assets/webfonts/SourceSerif4-Display-500-Italic.woff2", weight: "500", style: "italic" },
   ],
-  variable: "--font-bodoni",
+  variable: "--font-display-serif",
   display: "swap",
-  fallback: ["Didot", "Georgia", "serif"],
+  // Keep fallback names simple: next/font emits them unquoted.
+  fallback: ["Georgia", "serif"],
   adjustFontFallback: "Times New Roman",
 });
 
@@ -31,4 +33,4 @@ export const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-export const fontVariables = `${bodoni.variable} ${hanken.variable} ${plexMono.variable}`;
+export const fontVariables = `${displaySerif.variable} ${hanken.variable} ${plexMono.variable}`;

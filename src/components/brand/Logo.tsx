@@ -25,7 +25,6 @@ export function Logo({ className, sub, accent }: { className?: string; sub?: str
       <span className="flex flex-col">
         <span
           className={clsx("font-serif text-[1.05em]", biz.preview ? "block max-w-[12rem] truncate pb-0.5 tracking-[0.12em] sm:max-w-[18rem]" : "tracking-[0.26em]")}
-          style={{ fontVariationSettings: '"opsz" 24' }}
         >
           {biz.preview ? biz.shortName.toUpperCase() : "KOTA"}
         </span>

@@ -85,7 +85,7 @@ export function ContactForm({ locale, copy }: { locale: Locale; copy: Copy }) {
 
   return (
     <div>
-      <ol className="flex gap-6" aria-label="Steps">
+      <ol className="flex flex-wrap gap-x-6 gap-y-2" aria-label="Steps">
         {copy.steps.map((s, i) => (
           <li key={s} className={clsx("t-label flex items-center gap-2", i === step ? "text-fg" : i < step ? "text-accent" : "text-muted")}>
             <span className="t-mono">{kota(i * 3.2)}</span> {s}
