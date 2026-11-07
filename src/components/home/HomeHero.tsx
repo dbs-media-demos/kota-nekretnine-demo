@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Image, { getImageProps } from "next/image";
 import type { CSSProperties } from "react";
 import { preload } from "react-dom";
@@ -55,7 +56,7 @@ export function HomeHero({ locale, dict, biz }: { locale: Locale; dict: Dictiona
   preload(phoneSrc, { as: "image", imageSrcSet: phoneSrcSet, imageSizes: "100vw", media: PHONE_MEDIA, fetchPriority: "high" });
 
   return (
-    <section data-header="dark" data-hero-dark className="theme-dark relative h-[100svh] min-h-[660px] overflow-hidden phone:h-auto phone:min-h-0 phone:[--hero-top:clamp(5.25rem,calc(100svh-39rem),11rem)]" aria-labelledby="hero-title">
+    <section data-header="dark" data-hero-dark className={clsx("theme-dark relative h-[100svh] min-h-[660px] overflow-hidden phone:h-auto phone:min-h-0 phone:[--hero-top:clamp(5.25rem,calc(100svh-39rem),11rem)]", biz ? "phone:[--later-h:calc(var(--hero-top)+395.6px)]" : "phone:[--later-h:calc(var(--hero-top)+451.6px)]")} aria-labelledby="hero-title">
       <div className="anim-mask absolute inset-0 phone:bottom-auto phone:h-[calc(var(--hero-top)+9.5rem)] phone:animate-none!" style={d(0)}>
         <picture>
           <source media={PHONE_MEDIA} srcSet={phoneSrcSet} sizes="100vw" />

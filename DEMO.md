@@ -31,7 +31,7 @@
 - GSAP and Lenis load only off phones (`lib/motion.ts`: `useDeskMotion`, `loadGsap`). Phones get `layout/PhoneMotion` (one fade-and-rise per section, self-drawing level lines). Links don't prefetch on phones (`ui/SiteLink`).
 - Fonts on phones: `public/fonts/` only (Source Serif 500 + a Hanken subset, 40 KB); labels use the sans and accents stay upright. Desktop keeps Plex Mono and the italic.
 - Map/price data lives in `content/hood-geo.ts`, so neighbourhood guide copy stays off the client.
-- Load on phones: Chrome forces one layout as parsing ends, so what's off the first screen comes in on short timers (`.phone-later`, `--later-at`, `--later-h` in `globals.css`), initial load only. Hold with `display: none` on children and `min-height` on the box: `content-visibility` reports a false CLS when it ends, and `!important` utilities beat animations. No Intl while hydrating on phones (the first call costs about 50 ms): `eur()` groups digits itself, counters get `text` from the server.
+- Load on phones: Chrome forces one layout as parsing ends, so what's off the first screen comes in on short timers (`.phone-later`, `--later-at`, `--later-h` in `globals.css`), initial load only. Below 768 px the hero's copy does too, top to bottom, so that first layout has no text (the first line set costs about 40 ms) and is under 50 ms at 4x CPU. Hold with `display: none` on children and `min-height` on the box: `content-visibility` reports a false CLS when it ends, and `!important` utilities beat animations. No Intl while hydrating on phones (the first call costs about 50 ms): `eur()` groups digits itself, counters get `text` from the server.
 
 ## Portfolio copy
 EN title: Kota — boutique real estate in Novi Sad

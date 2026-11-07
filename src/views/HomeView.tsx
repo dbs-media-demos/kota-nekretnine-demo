@@ -49,7 +49,7 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
       <div className="phone-later phone:order-6 [--later-h:1916.5px] [--later-at:0.7s]">
         <Elevator locale={locale} />
       </div>
-      <div className="phone-later phone:order-2 [--later-h:657.75px] [--later-at:0.05s]">
+      <div className="phone-later phone:order-2 [--later-h:657.75px] [--later-at:0.12s]">
         <FeaturedRail label={biz ? "Primeri oglasa" : c.featuredLabel[locale]} title={c.featuredTitle[locale]} allLabel={biz ? "Pogledajte sve nekretnine" : c.featuredAll[locale]} allHref={pageHref(locale, "listings")}>
           {featured.map((l, i) => (
             <div key={l.id} data-card className="w-[78vw] shrink-0 snap-start sm:w-[44vw] lg:w-[24vw] phone:row-start-2 phone:w-auto!">

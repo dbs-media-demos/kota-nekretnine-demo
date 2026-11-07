@@ -584,9 +584,30 @@ img {
     .phone-later [data-rail] > [data-card]:nth-of-type(n + 4) {
       animation-duration: 0.2s;
     }
-    /* A frame after the first layout: the header's contents. The closed menu can't be tapped this early, its button isn't hydrated yet. */
+    /* The closed menu can't be tapped this early, its button isn't hydrated yet. */
     header > .wrap > * {
-      animation: later 1ms step-end;
+      animation: later 30ms step-end;
+    }
+    /* Phone widths: the first layout has no text at all, as the first line of text set on a page costs about 40 ms however short it is. The hero follows a piece at a time,
+       top to bottom, so nothing already painted moves; its box holds its height meanwhile. */
+    @media (max-width: 767.98px) {
+      [data-hero-dark] {
+        animation: later-box 60ms step-end;
+      }
+      body > a,
+      [data-hero-dark] > .wrap > .grid > :first-child > :first-child {
+        animation: later 1ms step-end;
+      }
+      #hero-title {
+        animation: later 15ms step-end;
+      }
+      [data-hero-dark] > .wrap > .grid > :last-child > *,
+      [data-phone-bar] {
+        animation: later 30ms step-end;
+      }
+      [data-hero-dark] > .wrap > .grid > :last-child > :nth-last-child(-n + 2) {
+        animation-duration: 60ms;
+      }
     }
     #site-menu > * {
       animation: later 0.15s step-end;

@@ -8,7 +8,7 @@ import { PhoneIcon } from "@/components/ui/PhoneIcon";
 export function MobileBar({ callLabel, textLabel, bookLabel, bookHref }: { callLabel: string; textLabel: string; bookLabel: string; bookHref: string }) {
   const biz = useBiz();
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[180] hidden grid-cols-[1.35fr_1fr] gap-2 border-t border-dunav/10 bg-kreda p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] phone:grid">
+    <div data-phone-bar className="fixed inset-x-0 bottom-0 z-[180] hidden grid-cols-[1.35fr_1fr] gap-2 border-t border-dunav/10 bg-kreda p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] phone:grid">
       {biz.phone ? (
         <>
           <a
