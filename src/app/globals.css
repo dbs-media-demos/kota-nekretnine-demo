@@ -568,6 +568,31 @@ img {
     font-weight: 500;
   }
 
+  /* The first layout is forced as parsing ends, and everything in it blocks the phone. So what's off the first screen stays out of the layout tree at first and
+     comes in on a short timer (--later-at), each piece in a task of its own, while its box keeps its height (--later-h). Both are animations: nothing is left over
+     afterwards, and where they can't run, or with reduced motion, the page is simply all there. Initial load only: PhoneMotion sets data-settled. */
+  html:not([data-settled]) {
+    .phone-later > section,
+    footer {
+      animation: later-box var(--later-at, 1.2s) step-end;
+    }
+    .phone-later > section > *,
+    .phone-later [data-rail] > *,
+    footer > * {
+      animation: later var(--later-at, 1.2s) step-end;
+    }
+    .phone-later [data-rail] > [data-card]:nth-of-type(n + 4) {
+      animation-duration: 0.2s;
+    }
+    /* A frame after the first layout: the header's contents. The closed menu can't be tapped this early, its button isn't hydrated yet. */
+    header > .wrap > * {
+      animation: later 1ms step-end;
+    }
+    #site-menu > * {
+      animation: later 0.15s step-end;
+    }
+  }
+
   /* Swipe gallery: the next photo half showing, a vertical swipe still scrolls the page */
   .phone-rail {
     display: flex;
@@ -605,6 +630,19 @@ img {
   button.rounded-full:active {
     transform: scale(0.97);
     transition: transform 0.12s var(--ease-out-expo), opacity 0.08s;
+  }
+}
+
+@keyframes later {
+  from,
+  to {
+    display: none;
+  }
+}
+@keyframes later-box {
+  from,
+  to {
+    min-height: var(--later-h, 1227.25px);
   }
 }
 

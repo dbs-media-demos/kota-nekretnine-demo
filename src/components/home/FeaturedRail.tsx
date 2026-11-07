@@ -47,6 +47,7 @@ export function FeaturedRail({ label, title, allLabel, allHref, children }: Prop
     <section ref={root} className="theme-light relative overflow-hidden lg:h-[100svh] phone:h-auto! phone:py-9" data-header="light" aria-labelledby="featured-title">
       <div
         ref={track}
+        data-rail
         className="no-scrollbar flex h-full snap-x snap-mandatory items-center gap-6 overflow-x-auto px-[var(--gutter)] py-24 lg:snap-none lg:gap-[4vw] lg:overflow-visible lg:py-0 motion-reduce:lg:snap-x motion-reduce:lg:overflow-x-auto phone:grid! phone:h-auto! phone:snap-x! phone:auto-cols-[var(--rail-w)] phone:grid-flow-col phone:grid-rows-[auto_auto] phone:items-start phone:gap-x-2.5! phone:gap-y-4 phone:overflow-x-auto! phone:py-0! phone:[scroll-padding-inline:var(--gutter)]"
       >
         {/* Phones: stays put above the photos while they swipe */}

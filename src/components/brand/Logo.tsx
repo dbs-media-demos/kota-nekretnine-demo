@@ -20,9 +20,9 @@ export function Mark({ className, accent = "currentColor" }: { className?: strin
 export function Logo({ className, sub, accent }: { className?: string; sub?: string; accent?: string }) {
   const biz = useBiz();
   return (
-    <span className={clsx("inline-flex items-center gap-2.5 leading-none", className)}>
+    <span className={clsx("inline-flex items-center gap-2.5 leading-none phone:max-w-full", className)}>
       <Mark className="h-[0.95em] w-auto shrink-0" accent={accent ?? "var(--mesing)"} />
-      <span className="flex flex-col">
+      <span className="flex flex-col phone:min-w-0">
         <span
           className={clsx("font-serif text-[1.05em]", biz.preview ? "block max-w-[12rem] truncate pb-0.5 tracking-[0.12em] sm:max-w-[18rem]" : "tracking-[0.26em]")}
         >

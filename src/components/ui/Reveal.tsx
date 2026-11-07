@@ -237,7 +237,10 @@ export function DimLine({ label, className, vertical }: { label: string; classNa
   );
 }
 
-/** Number that counts up when it scrolls into view. */
+/**
+ * Number that counts up when it scrolls into view. `text` is the finished number, formatted on the
+ * server: the first Intl call on a phone costs about 50 ms of hydration, and only the count-up needs it.
+ */
 export function Counter({
   value,
   decimals = 0,
@@ -245,6 +248,7 @@ export function Counter({
   suffix = "",
   className,
   locale = "sr",
+  text,
 }: {
   value: number;
   decimals?: number;
@@ -252,6 +256,7 @@ export function Counter({
   suffix?: string;
   className?: string;
   locale?: "sr" | "en";
+  text?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const fmt = (v: number) =>
@@ -283,7 +288,7 @@ export function Counter({
 
   return (
     <span ref={ref} className={className}>
-      {prefix + fmt(value) + suffix}
+      {text ?? prefix + fmt(value) + suffix}
     </span>
   );
 }

@@ -138,7 +138,7 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
         )}
       >
         <div className="wrap flex h-[var(--header-h)] items-center justify-between gap-6">
-          <Link href={homeHref} className="relative z-10 text-[1.35rem]" aria-label={`${biz.preview ? biz.name : site.nameLocalized[locale]}, ${dict.nav.home}`}>
+          <Link href={homeHref} className="relative z-10 text-[1.35rem] phone:min-w-0" aria-label={`${biz.preview ? biz.name : site.nameLocalized[locale]}, ${dict.nav.home}`}>
             <Logo />
           </Link>
 
@@ -161,7 +161,7 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
             </ul>
           </nav>
 
-          <div className="relative z-10 flex items-center gap-2 sm:gap-4">
+          <div className="relative z-10 flex items-center gap-2 sm:gap-4 phone:shrink-0">
             <a href={altHref} hrefLang={locale === "sr" ? "en" : "sr"} className="t-label grid h-11 min-w-11 place-items-center rounded-full px-2 hover:text-mesing" aria-label={dict.lang}>
               {dict.langShort}
             </a>

@@ -46,10 +46,10 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
       <div className="phone:order-1">
         <HomeHero locale={locale} dict={dict} biz={biz} />
       </div>
-      <div className="phone:order-6">
+      <div className="phone-later phone:order-6 [--later-h:1916.5px] [--later-at:0.7s]">
         <Elevator locale={locale} />
       </div>
-      <div className="phone:order-2">
+      <div className="phone-later phone:order-2 [--later-h:657.75px] [--later-at:0.05s]">
         <FeaturedRail label={biz ? "Primeri oglasa" : c.featuredLabel[locale]} title={c.featuredTitle[locale]} allLabel={biz ? "Pogledajte sve nekretnine" : c.featuredAll[locale]} allHref={pageHref(locale, "listings")}>
           {featured.map((l, i) => (
             <div key={l.id} data-card className="w-[78vw] shrink-0 snap-start sm:w-[44vw] lg:w-[24vw] phone:row-start-2 phone:w-auto!">
@@ -58,17 +58,17 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
           ))}
         </FeaturedRail>
       </div>
-      <div className="phone:order-3">
+      <div className="phone-later phone:order-3 [--later-h:424.25px] [--later-at:0.25s]">
         <Manifesto locale={locale} biz={biz} />
       </div>
       {biz && (
-        <div className="phone:order-7">
+        <div className="phone-later phone:order-7 [--later-h:640px] [--later-at:0.85s]">
           <PreviewMap biz={biz} dict={dict} />
         </div>
       )}
       {!biz && (
         <>
-          <div className="phone:order-7">
+          <div className="phone-later phone:order-7 [--later-h:858.5px] [--later-at:0.85s]">
             <MapTeaser
               locale={locale}
               label={c.mapLabel[locale]}
@@ -80,10 +80,10 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
               listingsHref={pageHref(locale, "listings")}
             />
           </div>
-          <div className="phone:order-8">
+          <div className="phone-later phone:order-8 [--later-h:471.25px] [--later-at:1s]">
             <HoodPanels locale={locale} label={c.hoodsLabel[locale]} title={c.hoodsTitle[locale]} />
           </div>
-          <div className="phone:order-9">
+          <div className="phone-later phone:order-9 [--later-h:682.25px] [--later-at:1.1s]">
             <ValuationTeaser
               locale={locale}
               href={pageHref(locale, "valuation")}
@@ -101,7 +101,7 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
           </div>
         </>
       )}
-      <div className="phone:order-4">
+      <div className="phone-later phone:order-4 [--later-h:1287px] [--later-at:0.4s]">
         <ReviewsMarquee
           locale={locale}
           dict={dict}
@@ -113,7 +113,7 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
         />
       </div>
       {!biz && (
-        <div className="phone:order-5">
+        <div className="phone-later phone:order-5 [--later-h:579.75px] [--later-at:0.55s]">
           <TeamStrip locale={locale} label={c.teamLabel[locale]} title={c.teamTitle[locale]} allLabel={c.teamAll[locale]} allHref={pageHref(locale, "about")} />
         </div>
       )}

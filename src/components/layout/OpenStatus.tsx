@@ -6,6 +6,7 @@ import { hours, site } from "@/lib/site";
 import type { Dictionary } from "@/i18n/dictionary";
 import { useBiz } from "@/components/preview/BizContext";
 import { openStatus } from "@/lib/biz-core";
+import { isPhone } from "@/lib/motion";
 
 type Status = { open: boolean; text: string };
 
@@ -53,9 +54,13 @@ export function OpenStatus({ dict, className }: { dict: Dictionary; className?: 
 
   useEffect(() => {
     const update = () => setStatus(biz.preview ? openStatus(biz) : computeStatus(dict));
-    update();
+    // Phones: its first Intl call is slow and this line sits in the footer, so hydration doesn't wait for it.
+    const first = isPhone() ? window.setTimeout(update) : (update(), 0);
     const id = window.setInterval(update, 60_000);
-    return () => window.clearInterval(id);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(id);
+    };
   }, [dict, biz]);
 
   if (biz.preview && !biz.hours) return null;

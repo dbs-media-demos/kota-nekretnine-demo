@@ -1,6 +1,7 @@
 import { ScrubWords, Counter, DimLine } from "@/components/ui/Reveal";
 import { homeCopy as c } from "@/content/home";
 import type { Locale } from "@/lib/i18n";
+import { num } from "@/lib/format";
 import { openDays, type Biz } from "@/lib/biz-core";
 
 export function Manifesto({ locale, biz }: { locale: Locale; biz?: Biz }) {
@@ -26,7 +27,7 @@ export function Manifesto({ locale, biz }: { locale: Locale; biz?: Biz }) {
             <div key={s.label.en} className="flex flex-col">
               <dt className="t-label order-2 mt-3 text-muted phone:mt-1.5">{s.label[locale]}</dt>
               <dd className="order-1 font-serif text-[clamp(2.6rem,5vw,4.5rem)] leading-none tracking-[-0.03em] phone:text-[2.1rem]">
-                <Counter value={s.value} decimals={s.decimals ?? 0} suffix={s.suffix} locale={locale} />
+                <Counter value={s.value} decimals={s.decimals ?? 0} suffix={s.suffix} locale={locale} text={num(s.value, locale, s.decimals ?? 0) + (s.suffix ?? "")} />
               </dd>
             </div>
           ))}

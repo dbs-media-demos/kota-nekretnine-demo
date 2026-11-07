@@ -9,7 +9,10 @@ export const prefersReducedMotion = () => typeof window !== "undefined" && windo
 
 export const isTouch = () => typeof window !== "undefined" && window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
-export const isPhone = () => typeof window !== "undefined" && window.matchMedia(PHONE_MEDIA).matches;
+let phoneQuery: MediaQueryList | undefined;
+
+/** Asked by every link and scene while hydrating, so the query is parsed once. */
+export const isPhone = () => typeof window !== "undefined" && (phoneQuery ??= window.matchMedia(PHONE_MEDIA)).matches;
 
 let kit: Promise<GsapKit> | null = null;
 

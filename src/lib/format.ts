@@ -3,9 +3,11 @@ import type { Locale } from "./i18n";
 const nf = (locale: Locale, opts?: Intl.NumberFormatOptions) =>
   new Intl.NumberFormat(locale === "sr" ? "sr-Latn-RS" : "en-GB", opts);
 
-/** 198000 → "198.000 €" (sr) / "€198,000" (en) */
-export const eur = (value: number, locale: Locale) =>
-  locale === "sr" ? `${nf(locale, { maximumFractionDigits: 0 }).format(value)} €` : `€${nf(locale, { maximumFractionDigits: 0 }).format(value)}`;
+/** 198000 → "198.000 €" (sr) / "€198,000" (en). No Intl: the first call costs a phone about 50 ms while hydrating, and prices only need grouping. */
+export const eur = (value: number, locale: Locale) => {
+  const whole = String(Math.round(value)).replace(/\B(?=(\d{3})+$)/g, locale === "sr" ? "." : ",");
+  return locale === "sr" ? `${whole} €` : `€${whole}`;
+};
 
 export const num = (value: number, locale: Locale, digits = 0) =>
   nf(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
