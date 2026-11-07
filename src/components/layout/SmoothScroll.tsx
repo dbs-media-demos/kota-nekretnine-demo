@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import type Lenis from "lenis";
-import { gsap, ScrollTrigger, prefersReducedMotion, isTouch } from "@/lib/gsap";
+import { isPhone, isTouch, loadGsap, prefersReducedMotion } from "@/lib/motion";
 
 declare global {
   interface Window {
@@ -11,35 +11,38 @@ declare global {
   }
 }
 
-/** Lenis smooth scrolling driven by GSAP's ticker. Off on touch and reduced motion. */
+/** Lenis smooth scrolling driven by GSAP's ticker. Desktop only: off on phones, touch and reduced motion. */
 export function SmoothScroll() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (prefersReducedMotion() || isTouch()) return;
+    if (prefersReducedMotion() || isPhone() || isTouch()) return;
     let lenis: Lenis | null = null;
     let cancelled = false;
-    const tick = (time: number) => lenis?.raf(time * 1000);
+    let stop = () => {};
     // Loaded after hydration: smooth scrolling is an enhancement, not a dependency.
-    import("lenis").then(({ default: LenisCtor }) => {
+    Promise.all([loadGsap(), import("lenis")]).then(([{ gsap, ScrollTrigger }, { default: LenisCtor }]) => {
       if (cancelled) return;
+      const tick = (time: number) => lenis?.raf(time * 1000);
       lenis = new LenisCtor({ lerp: 0.1, wheelMultiplier: 1, anchors: { offset: -90 } });
       window.__lenis = lenis;
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
+      stop = () => gsap.ticker.remove(tick);
     });
     return () => {
       cancelled = true;
-      gsap.ticker.remove(tick);
+      stop();
       lenis?.destroy();
       delete window.__lenis;
     };
   }, []);
 
   useEffect(() => {
+    if (isPhone()) return;
     window.__lenis?.resize();
-    const id = window.setTimeout(() => ScrollTrigger.refresh(), 400);
+    const id = window.setTimeout(() => loadGsap().then(({ ScrollTrigger }) => ScrollTrigger.refresh()), 400);
     return () => window.clearTimeout(id);
   }, [pathname]);
 

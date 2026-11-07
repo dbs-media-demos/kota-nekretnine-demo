@@ -1,4 +1,4 @@
-import { hoods, type HoodId } from "@/content/neighbourhoods";
+import { hoodGeo as hoods, type HoodId } from "@/content/hood-geo";
 
 /**
  * Illustrative valuation model. Base €/m² per neighbourhood, adjusted for

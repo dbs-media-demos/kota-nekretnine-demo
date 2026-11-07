@@ -1,29 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 
-/** Tweens a displayed number towards `target` whenever it changes. */
+/** Tweens a displayed number towards `target` whenever it changes (power3.out, without GSAP so phones can use it). */
 export function useAnimatedNumber(target: number, duration = 0.8) {
   const [value, setValue] = useState(target);
-  const obj = useRef({ v: target });
+  const current = useRef(target);
 
   useEffect(() => {
     if (prefersReducedMotion()) {
-      obj.current.v = target;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- jump straight to the value
+      current.current = target;
       setValue(target);
       return;
     }
-    const tween = gsap.to(obj.current, {
-      v: target,
-      duration,
-      ease: "power3.out",
-      onUpdate: () => setValue(Math.round(obj.current.v)),
+    const from = current.current;
+    const start = performance.now();
+    let raf = requestAnimationFrame(function step(now) {
+      const t = Math.min(1, (now - start) / (duration * 1000));
+      current.current = from + (target - from) * (1 - Math.pow(1 - t, 4));
+      setValue(Math.round(current.current));
+      if (t < 1) raf = requestAnimationFrame(step);
     });
-    return () => {
-      tween.kill();
-    };
+    return () => cancelAnimationFrame(raf);
   }, [target, duration]);
 
   return value;

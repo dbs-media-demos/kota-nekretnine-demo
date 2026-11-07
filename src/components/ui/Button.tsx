@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 import { Magnetic } from "./Magnetic";
@@ -28,7 +28,7 @@ export function Button({ href, children, variant = "solid", className, magnetic 
   const inner = (
     <>
       <span>{children}</span>
-      <span className="relative block h-3 w-4 overflow-hidden" aria-hidden="true">
+      <span className="relative block h-3 w-4 overflow-hidden phone:leading-3" aria-hidden="true">
         <span className="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-full">→</span>
         <span className="absolute inset-0 -translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0">→</span>
       </span>

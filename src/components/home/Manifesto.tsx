@@ -14,18 +14,18 @@ export function Manifesto({ locale, biz }: { locale: Locale; biz?: Biz }) {
       ]
     : c.stats;
   return (
-    <section className="theme-light py-28 md:py-40" data-header="light">
+    <section className="theme-light py-28 md:py-40 phone:py-9" data-header="light">
       <div className="wrap">
-        <DimLine label={locale === "sr" ? "1 : 100" : "Scale 1 : 100"} className="mb-14 text-muted" />
+        <DimLine label={locale === "sr" ? "1 : 100" : "Scale 1 : 100"} className="mb-14 text-muted phone:mb-5" />
         <ScrubWords
           text={c.manifesto[locale]}
-          className="font-serif text-[clamp(1.9rem,4.4vw,4.4rem)] leading-[1.08] tracking-[-0.02em]"
+          className="font-serif text-[clamp(1.9rem,4.4vw,4.4rem)] leading-[1.08] tracking-[-0.02em] phone:text-[1.4rem] phone:leading-[1.2]"
         />
-        <dl className="mt-20 grid grid-cols-2 gap-x-6 gap-y-12 border-t border-line pt-12 md:grid-cols-4">
+        <dl className="mt-20 grid grid-cols-2 gap-x-6 gap-y-12 border-t border-line pt-12 md:grid-cols-4 phone:mt-6 phone:gap-y-5 phone:pt-5">
           {stats.map((s) => (
             <div key={s.label.en} className="flex flex-col">
-              <dt className="t-label order-2 mt-3 text-muted">{s.label[locale]}</dt>
-              <dd className="order-1 font-serif text-[clamp(2.6rem,5vw,4.5rem)] leading-none tracking-[-0.03em]">
+              <dt className="t-label order-2 mt-3 text-muted phone:mt-1.5">{s.label[locale]}</dt>
+              <dd className="order-1 font-serif text-[clamp(2.6rem,5vw,4.5rem)] leading-none tracking-[-0.03em] phone:text-[2.1rem]">
                 <Counter value={s.value} decimals={s.decimals ?? 0} suffix={s.suffix} locale={locale} />
               </dd>
             </div>

@@ -204,3 +204,5 @@ Downloaded at up to 2000px and re-encoded (JPEG q74); `next/image` serves AVIF/W
 | `team/stefan.jpg` | https://unsplash.com/photos/kwKAvFdfWg8 | [Michael Proctor](https://unsplash.com/@mproctor) |
 | `team/nikola.jpg` | https://unsplash.com/photos/zYD6ou1Qj10 | [Christian Buehner](https://unsplash.com/@christianbuehner) |
 | `team/marija.jpg` | https://unsplash.com/photos/QXevDflbl8A | [Štefan Štefančík](https://unsplash.com/@cikstefan) |
+
+Phone hero crops: `city/hero-phone.jpg` (from `city/hero-stari-grad-sunset.jpg`) and `listings/l11/hero-phone.jpg` (from `listings/l11/04.jpg`).

@@ -3,9 +3,9 @@
 import { useRef, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { hoods, landmarks, river, bridges, type HoodId } from "@/content/neighbourhoods";
+import { hoodGeo as hoods, landmarks, river, bridges, type HoodId } from "@/content/hood-geo";
 import type { Locale } from "@/lib/i18n";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import { prefersReducedMotion, useDeskMotion } from "@/lib/motion";
 
 export type MapPin = { id: string; at: [number, number]; label: string; href?: string };
 
@@ -47,8 +47,8 @@ export function NoviSadMap({
     router.push(href);
   };
 
-  useGSAP(
-    () => {
+  useDeskMotion(
+    ({ gsap }) => {
       const svg = ref.current;
       if (!svg || !animate || prefersReducedMotion()) return;
       if (svg.getBoundingClientRect().top < window.innerHeight * 0.9) return;

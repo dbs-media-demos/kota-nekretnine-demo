@@ -9,15 +9,15 @@ export function PreviewMap({ biz, dict }: { biz: Biz; dict: Dictionary }) {
   const embed = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
   return (
-    <section className="theme-chalk py-24 md:py-36" data-header="light" aria-labelledby="visit-title">
-      <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+    <section className="theme-chalk py-24 md:py-36 phone:py-9" data-header="light" aria-labelledby="visit-title">
+      <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center phone:grid-cols-1! phone:gap-5">
         <div>
           <p className="t-label text-accent">▽ Kancelarija</p>
-          <h2 id="visit-title" className="t-h1 mt-5 max-w-[14ch]">
+          <h2 id="visit-title" className="t-h1 mt-5 max-w-[14ch] phone:mt-2">
             Vidimo se na <em className="italic-accent">razgledanju.</em>
           </h2>
-          {biz.address.full && <p className="t-lead mt-8">{biz.address.full}</p>}
-          <OpenStatus dict={dict} className="mt-6" />
+          {biz.address.full && <p className="t-lead mt-8 phone:mt-3">{biz.address.full}</p>}
+          <OpenStatus dict={dict} className="mt-6 phone:mt-3" />
           {biz.hours && (
             <dl className="t-mono mt-5 grid max-w-xs grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
               {weekFromMonday(biz.hours).map((h) => (
@@ -28,7 +28,7 @@ export function PreviewMap({ biz, dict }: { biz: Biz; dict: Dictionary }) {
               ))}
             </dl>
           )}
-          <div className="mt-10">
+          <div className="mt-10 phone:mt-4">
             <Button href={directions} variant="outline">
               Kako do nas
             </Button>

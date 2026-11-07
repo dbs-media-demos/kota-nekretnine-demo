@@ -1,29 +1,17 @@
 import type { Localized } from "@/lib/i18n";
+import { hoodGeo, landmarks, river, bridges, type HoodGeo, type HoodId } from "./hood-geo";
 
-export type HoodId =
-  | "stari-grad"
-  | "liman"
-  | "grbavica"
-  | "podbara"
-  | "petrovaradin"
-  | "sremska-kamenica"
-  | "detelinara"
-  | "novo-naselje";
+export { landmarks, river, bridges };
+export type { HoodId };
+
 
 export type Img = { src: string; alt: Localized<string>; portrait?: boolean };
 
 export type Chapter = { kicker: Localized<string>; title: Localized<string>; text: Localized<string>; image: Img };
 
-export type Hood = {
-  id: HoodId;
-  name: Localized<string>;
+export type Hood = HoodGeo & {
   /** Only the six guided neighbourhoods have a page. */
   slug?: Localized<string>;
-  bank: "north" | "south";
-  /** SVG map geometry, viewBox 0 0 1000 700 */
-  shape: string;
-  center: [number, number];
-  pricePerM2: number;
   tagline: Localized<string>;
   intro?: Localized<string>;
   hero?: Img;
@@ -39,15 +27,12 @@ const img = (name: string, sr: string, en: string, portrait = false): Img => ({
   portrait,
 });
 
+const geo = (id: HoodId) => hoodGeo.find((h) => h.id === id)!;
+
 export const hoods: Hood[] = [
   {
-    id: "stari-grad",
-    name: { sr: "Stari grad", en: "Stari grad" },
+    ...geo("stari-grad"),
     slug: { sr: "stari-grad", en: "old-town" },
-    bank: "north",
-    shape: "M420 290 L560 250 L640 300 L622 440 L470 426 Z",
-    center: [540, 352],
-    pricePerM2: 3150,
     tagline: { sr: "Visoki plafoni, kaldrma i sve na pet minuta.", en: "High ceilings, cobblestones and everything five minutes away." },
     intro: {
       sr: "Centar Novog Sada je grad u malom: Trg slobode, Zmaj Jovina, Dunavska i Dunavski park, sve na razdaljini jedne šetnje. Stanovi u austrougarskim zgradama imaju plafone od 3,4 metra, drvene podove i prozore koji gledaju na krošnje. Kupci ovde plaćaju adresu, ali dobijaju život bez automobila.",
@@ -98,13 +83,8 @@ export const hoods: Hood[] = [
     },
   },
   {
-    id: "liman",
-    name: { sr: "Liman", en: "Liman" },
+    ...geo("liman"),
     slug: { sr: "liman", en: "liman" },
-    bank: "north",
-    shape: "M300 460 L470 426 L612 441 L602 478 L470 524 L340 562 Z",
-    center: [455, 485],
-    pricePerM2: 2950,
     tagline: { sr: "Kej, Štrand i univerzitet u istom komšiluku.", en: "The quay, the city beach and the university on one block." },
     intro: {
       sr: "Liman je planiran šezdesetih za ljude koji žele svetlo i zelenilo. Široki bulevari, zgrade sa terasama i Sunčani kej na kome se trči, vozi bicikl i gleda zalazak. Liman IV je najtraženiji, Liman I najmirniji.",
@@ -152,13 +132,8 @@ export const hoods: Hood[] = [
     },
   },
   {
-    id: "grbavica",
-    name: { sr: "Grbavica", en: "Grbavica" },
+    ...geo("grbavica"),
     slug: { sr: "grbavica", en: "grbavica" },
-    bank: "north",
-    shape: "M250 305 L420 292 L470 426 L300 458 Z",
-    center: [360, 372],
-    pricePerM2: 2650,
     tagline: { sr: "Kuće sa baštama pored novogradnje. Pola sata od svega, peške.", en: "Houses with gardens next to new builds. Half an hour from everything, on foot." },
     intro: {
       sr: "Grbavica se poslednjih deset godina menja brže od ostatka grada. Stare prizemne kuće ustupaju mesto zgradama od pet spratova, ali ulice su ostale tihe, a Promenada i Bulevar su na par minuta.",
@@ -206,13 +181,8 @@ export const hoods: Hood[] = [
     },
   },
   {
-    id: "podbara",
-    name: { sr: "Podbara", en: "Podbara" },
+    ...geo("podbara"),
     slug: { sr: "podbara", en: "podbara" },
-    bank: "north",
-    shape: "M560 250 L700 182 L850 250 L812 384 L700 442 L640 300 Z",
-    center: [718, 316],
-    pricePerM2: 2450,
     tagline: { sr: "Najstariji deo grada koji se tek otkriva.", en: "The oldest part of town, only now being discovered." },
     intro: {
       sr: "Podbara je nastala uz Dunav, oko Almaške crkve i ribarskih kuća. Danas tu žive arhitekte, muzičari i porodice koje su htele centar bez gužve centra. Cene rastu brže nego igde u gradu, i dalje sa niže osnove.",
@@ -260,13 +230,8 @@ export const hoods: Hood[] = [
     },
   },
   {
-    id: "petrovaradin",
-    name: { sr: "Petrovaradin", en: "Petrovaradin" },
+    ...geo("petrovaradin"),
     slug: { sr: "petrovaradin", en: "petrovaradin" },
-    bank: "south",
-    shape: "M560 542 L660 500 L760 462 L860 420 L900 520 L760 602 L600 612 Z",
-    center: [735, 540],
-    pricePerM2: 2300,
     tagline: { sr: "Život ispod tvrđave, sa pogledom na ceo grad.", en: "Life beneath the fortress, with the whole city in view." },
     intro: {
       sr: "Petrovaradin je mali barokni grad preko reke. Kuće sa dvorištima, uske ulice Podgrađa i tvrđava koja leti postaje EXIT, a ostatak godine najmirniji park u gradu. Ovde se kupuju kuće, ne kvadrati.",
@@ -317,13 +282,8 @@ export const hoods: Hood[] = [
     },
   },
   {
-    id: "sremska-kamenica",
-    name: { sr: "Sremska Kamenica", en: "Sremska Kamenica" },
+    ...geo("sremska-kamenica"),
     slug: { sr: "sremska-kamenica", en: "sremska-kamenica" },
-    bank: "south",
-    shape: "M220 652 L360 612 L500 576 L540 642 L420 700 L230 700 Z",
-    center: [385, 650],
-    pricePerM2: 2100,
     tagline: { sr: "Vinogradi, šuma i Dunav. Grad je preko mosta.", en: "Vineyards, forest and the Danube. The city is across the bridge." },
     intro: {
       sr: "Kamenica je Novi Sad za one koji žele baštu, bazen i tišinu, a da im centar ostane na petnaest minuta vožnje. Čardak, Popovica i Tatarsko brdo su najtraženiji delovi: vile na padinama Fruške gore sa pogledom na reku.",
@@ -371,21 +331,11 @@ export const hoods: Hood[] = [
     },
   },
   {
-    id: "detelinara",
-    name: { sr: "Detelinara", en: "Detelinara" },
-    bank: "north",
-    shape: "M230 152 L400 122 L420 292 L250 305 L240 300 Z",
-    center: [325, 215],
-    pricePerM2: 2250,
+    ...geo("detelinara"),
     tagline: { sr: "Zelen, miran i praktičan za porodice.", en: "Green, calm and practical for families." },
   },
   {
-    id: "novo-naselje",
-    name: { sr: "Novo naselje", en: "Novo naselje" },
-    bank: "north",
-    shape: "M60 252 L230 222 L250 305 L300 458 L90 420 Z",
-    center: [175, 330],
-    pricePerM2: 2200,
+    ...geo("novo-naselje"),
     tagline: { sr: "Veliki stanovi, parkovi i najviše parkinga u gradu.", en: "Large flats, parks and the most parking in town." },
   },
 ];
@@ -393,21 +343,7 @@ export const hoods: Hood[] = [
 export const guidedHoods = hoods.filter((h) => h.slug);
 export const hoodById = (id: HoodId) => hoods.find((h) => h.id === id)!;
 
-/** Landmarks used for walk times and on the map. */
-export const landmarks = [
-  { id: "park", name: { sr: "Dunavski park", en: "Danube Park" }, at: [592, 382] as [number, number] },
-  { id: "fortress", name: { sr: "Petrovaradinska tvrđava", en: "Petrovaradin Fortress" }, at: [690, 520] as [number, number] },
-  { id: "spens", name: { sr: "SPENS", en: "SPENS" }, at: [505, 420] as [number, number] },
-  { id: "promenada", name: { sr: "Promenada", en: "Promenada mall" }, at: [432, 418] as [number, number] },
-] as const;
 
-/** Map river centreline and bridges. */
-export const river = "M-20 612 C 120 618, 260 610, 360 578 S 540 505, 640 472 S 790 410, 860 368 S 960 318, 1020 300";
-export const bridges = [
-  { name: { sr: "Most slobode", en: "Liberty Bridge" }, d: "M414 522 L432 590" },
-  { name: { sr: "Varadinski most", en: "Varadin Bridge" }, d: "M630 448 L652 500" },
-  { name: { sr: "Žeželjev most", en: "Žeželj Bridge" }, d: "M772 404 L800 452" },
-];
 
 /**
  * Illustrative walking minutes on the map: 1 unit ≈ 7.5 m, 80 m/min walking,

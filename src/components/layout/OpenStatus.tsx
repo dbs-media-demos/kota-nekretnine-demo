@@ -61,9 +61,9 @@ export function OpenStatus({ dict, className }: { dict: Dictionary; className?: 
   if (biz.preview && !biz.hours) return null;
 
   return (
-    <span className={clsx("inline-flex items-center gap-2", className)} aria-live="polite">
+    <span className={clsx("inline-flex items-center gap-2 phone:min-h-[2.1rem] phone:items-start", className)} aria-live="polite">
       <span
-        className={clsx("h-2 w-2 shrink-0 rounded-full", status?.open ? "pulse-dot bg-[#4f9a6a] text-[#4f9a6a]" : "bg-current opacity-40")}
+        className={clsx("h-2 w-2 shrink-0 rounded-full phone:mt-1", status?.open ? "pulse-dot bg-[#4f9a6a] text-[#4f9a6a]" : "bg-current opacity-40")}
       />
       <span className="t-label">{status ? status.text : dict.hoursLabel}</span>
     </span>

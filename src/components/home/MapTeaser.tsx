@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import clsx from "clsx";
 import { NoviSadMap, type MapPin } from "@/components/map/NoviSadMap";
-import { hoods, type HoodId } from "@/content/neighbourhoods";
+import { hoodGeo as hoods, type HoodId } from "@/content/hood-geo";
 import type { Locale } from "@/lib/i18n";
 import { eur } from "@/lib/format";
 
@@ -26,29 +26,29 @@ export function MapTeaser({ locale, label, title, lead, guideLabel, pins, guideH
   const max = sorted[0].pricePerM2;
 
   return (
-    <section className="theme-chalk py-24 md:py-36" data-header="light" aria-labelledby="map-title">
-      <div className="wrap grid grid-cols-1 gap-14 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:items-center">
+    <section className="theme-chalk py-24 md:py-36 phone:py-9" data-header="light" aria-labelledby="map-title">
+      <div className="wrap grid grid-cols-1 gap-14 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:items-center phone:grid-cols-1! phone:gap-5">
         <div>
           <p className="t-label text-accent">▽ {label}</p>
-          <h2 id="map-title" className="t-h1 mt-5">
+          <h2 id="map-title" className="t-h1 mt-5 phone:mt-2">
             {title}
           </h2>
-          <p className="t-lead mt-6 max-w-[42ch] text-muted">{lead}</p>
-          <ul className="mt-10 border-t border-line" onPointerLeave={() => setActive(null)}>
+          <p className="t-lead mt-6 max-w-[42ch] text-muted phone:mt-2">{lead}</p>
+          <ul className="mt-10 border-t border-line phone:mt-4" onPointerLeave={() => setActive(null)}>
             {sorted.map((h) => {
               const href = guideHrefs[h.id];
               const isActive = active === h.id;
               const row = (
-                <span className="flex items-center gap-4 py-3.5">
-                  <span className={clsx("min-w-0 flex-1 font-serif text-[1.35rem] transition-colors sm:w-40 sm:flex-none", isActive && "text-accent")}>{h.name[locale]}</span>
+                <span className="flex items-center gap-4 py-3.5 phone:py-2">
+                  <span className={clsx("min-w-0 flex-1 font-serif text-[1.35rem] transition-colors sm:w-40 sm:flex-none phone:text-[1.12rem]", isActive && "text-accent")}>{h.name[locale]}</span>
                   <span className="relative hidden h-px flex-1 bg-line sm:block">
                     <span
                       className="absolute inset-y-0 left-0 origin-left bg-current transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                       style={{ width: `${(h.pricePerM2 / max) * 100}%`, transform: isActive ? "scaleX(1)" : "scaleX(0.35)" }}
                     />
                   </span>
-                  <span className="t-mono w-28 shrink-0 text-right text-sm">{eur(h.pricePerM2, locale)}/m²</span>
-                  <span className={clsx("t-label w-14 shrink-0 text-right text-accent", !href && "opacity-0")}>{href ? `${guideLabel} →` : ""}</span>
+                  <span className="t-mono w-28 shrink-0 text-right text-sm phone:w-[5.5rem]">{eur(h.pricePerM2, locale)}/m²</span>
+                  <span className={clsx("t-label w-14 shrink-0 text-right text-accent phone:w-[4.25rem] phone:whitespace-nowrap", !href && "opacity-0")}>{href ? `${guideLabel} →` : ""}</span>
                 </span>
               );
               return (

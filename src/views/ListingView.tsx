@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { Breadcrumbs } from "@/components/sections/Breadcrumbs";
 import { Gallery } from "@/components/listing/Gallery";
 import { FloorPlan } from "@/components/listing/FloorPlan";

@@ -13,6 +13,7 @@ export const displaySerif = localFont({
   ],
   variable: "--font-display-serif",
   display: "swap",
+  preload: false,
   // Keep fallback names simple: next/font emits them unquoted.
   fallback: ["Georgia", "serif"],
   adjustFontFallback: "Times New Roman",
@@ -23,6 +24,7 @@ export const hanken = Hanken_Grotesk({
   subsets: ["latin", "latin-ext"],
   variable: "--font-hanken",
   display: "swap",
+  preload: false,
 });
 
 /** Architectural annotations: kotas, m², prices, room counts. */
@@ -31,6 +33,7 @@ export const plexMono = IBM_Plex_Mono({
   weight: ["400"],
   variable: "--font-plex",
   display: "swap",
+  preload: false,
 });
 
 export const fontVariables = `${displaySerif.variable} ${hanken.variable} ${plexMono.variable}`;

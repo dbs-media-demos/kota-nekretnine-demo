@@ -12,6 +12,8 @@ export const homeCopy = {
   heroLine1: L("Dom na", "A home at"),
   heroLine2: L("pravoj", "the right"),
   heroLine3: L("visini.", "level."),
+  heroPhoneService: L("Stanovi i kuće", "Flats and houses"),
+  heroPhoneTown: L("u Novom Sadu.", "in Novi Sad."),
   heroLead: L(
     "Stanovi i kuće u Novom Sadu, izmereni do centimetra, sa proverenim papirima i pravom cenom po kvadratu.",
     "Flats and houses in Novi Sad, measured to the centimetre, with checked paperwork and an honest price per square metre.",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, isTouch, prefersReducedMotion } from "@/lib/gsap";
+import { isPhone, isTouch, loadGsap, prefersReducedMotion, type GsapKit } from "@/lib/motion";
 
 /**
  * Desktop cursor: a small level mark (▽) that trails the pointer. Over
@@ -13,7 +13,7 @@ export function Cursor() {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    if (isTouch() || prefersReducedMotion()) return;
+    if (isPhone() || isTouch() || prefersReducedMotion()) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- enable only after we know the pointer is fine
     setEnabled(true);
     document.documentElement.classList.add("has-cursor");
@@ -23,10 +23,13 @@ export function Cursor() {
   useEffect(() => {
     const el = ref.current;
     if (!enabled || !el) return;
-    const xTo = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
-    const yTo = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
+    let dead = false;
+    let gsap: GsapKit["gsap"] | undefined;
+    let xTo: ReturnType<GsapKit["gsap"]["quickTo"]>;
+    let yTo: ReturnType<GsapKit["gsap"]["quickTo"]>;
     let shown = false;
     const move = (e: PointerEvent) => {
+      if (!gsap) return;
       if (!shown) {
         gsap.set(el, { x: e.clientX, y: e.clientY });
         gsap.to(el, { opacity: 1, duration: 0.3 });
@@ -38,12 +41,19 @@ export function Cursor() {
       setLabel(target?.dataset.cursor ?? null);
     };
     const leave = () => {
-      gsap.to(el, { opacity: 0, duration: 0.3 });
+      gsap?.to(el, { opacity: 0, duration: 0.3 });
       shown = false;
     };
+    loadGsap().then((g) => {
+      if (dead) return;
+      gsap = g.gsap;
+      xTo = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
+      yTo = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
+    });
     window.addEventListener("pointermove", move, { passive: true });
     document.addEventListener("pointerleave", leave);
     return () => {
+      dead = true;
       window.removeEventListener("pointermove", move);
       document.removeEventListener("pointerleave", leave);
     };

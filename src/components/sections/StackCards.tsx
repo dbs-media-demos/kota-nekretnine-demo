@@ -14,7 +14,7 @@ export function StackCards({ cards }: { cards: Card[] }) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+      mm.add("(min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
         const items = gsap.utils.toArray<HTMLElement>("[data-card]", root.current);
         items.forEach((card, i) => {
           if (i === items.length - 1) return;

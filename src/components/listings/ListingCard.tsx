@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import Image from "next/image";
 import { ViewTransition } from "react";
 import clsx from "clsx";
@@ -45,7 +45,7 @@ export function ListingCard({ listing: l, locale, dict, sizes = "(min-width: 102
     <div
       className={clsx(
         "relative overflow-hidden bg-surface-2",
-        aspect === "tall" ? "aspect-[4/5]" : aspect === "wide" ? "aspect-[3/2]" : "aspect-square",
+        aspect === "tall" ? "aspect-[4/5] phone:aspect-[3/4]" : aspect === "wide" ? "aspect-[3/2]" : "aspect-square",
       )}
     >
       <Image
@@ -100,16 +100,16 @@ export function ListingCard({ listing: l, locale, dict, sizes = "(min-width: 102
             )}
           />
         </div>
-        <div className="mt-4 flex items-baseline justify-between gap-4">
+        <div className="mt-4 flex items-baseline justify-between gap-4 phone:mt-3 phone:flex-col-reverse phone:gap-1">
           <p className="t-label text-muted">
             {place ?? hood.name[locale]} · {dict.type[l.type]}
           </p>
           <p className="t-mono shrink-0 text-[1.02rem]">{priceLabel(l, locale, dict)}</p>
         </div>
-        <h3 className="mt-2 font-serif text-[1.45rem] leading-[1.12] tracking-[-0.01em]" style={{ fontVariationSettings: '"opsz" 36' }}>
+        <h3 className="mt-2 font-serif text-[1.45rem] leading-[1.12] tracking-[-0.01em] phone:mt-1 phone:text-[1.22rem]" style={{ fontVariationSettings: '"opsz" 36' }}>
           {l.title[locale]}
         </h3>
-        <p className="t-mono mt-2 text-[0.82rem] text-muted">{metaLine(l, locale, dict)}</p>
+        <p className="t-mono mt-2 text-[0.82rem] text-muted phone:mt-1">{metaLine(l, locale, dict)}</p>
       </Link>
     </article>
   );

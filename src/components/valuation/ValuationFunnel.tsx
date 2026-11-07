@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import clsx from "clsx";
-import { hoods, type HoodId } from "@/content/neighbourhoods";
+import { hoodGeo as hoods, type HoodId } from "@/content/hood-geo";
 import type { valuationPage } from "@/content/pages";
 import type { Locale } from "@/lib/i18n";
 import type { Picked } from "@/lib/pick";

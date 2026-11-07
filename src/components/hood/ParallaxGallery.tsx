@@ -15,7 +15,7 @@ export function ParallaxGallery({ images, locale }: { images: Img[]; locale: Loc
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+      mm.add("(min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
         const speeds = [-60, 90, -30];
         gsap.utils.toArray<HTMLElement>("[data-col]", root.current).forEach((col, i) => {
           gsap.fromTo(col, { y: -speeds[i] }, { y: speeds[i], ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } });

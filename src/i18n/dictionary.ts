@@ -19,6 +19,7 @@ const sr = {
   },
   cta: {
     call: "Pozovi",
+    text: "Pošalji poruku",
     book: "Zakaži razgledanje",
     browse: "Pogledaj ponudu",
     valuation: "Besplatna procena",
@@ -89,6 +90,7 @@ const en: Dictionary = {
   },
   cta: {
     call: "Call",
+    text: "Text us",
     book: "Book a viewing",
     browse: "Browse listings",
     valuation: "Free valuation",

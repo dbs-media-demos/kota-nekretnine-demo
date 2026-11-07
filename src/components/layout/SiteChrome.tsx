@@ -55,7 +55,7 @@ export function SiteChrome({ locale, biz, children }: { locale: Locale; biz?: Bi
         <main id="main">{children}</main>
       </ViewTransition>
       <Footer locale={locale} dict={dict} biz={biz} />
-      <MobileBar callLabel={dict.cta.call} bookLabel={dict.cta.book} bookHref={pageHref(locale, "contact")} />
+      <MobileBar callLabel={dict.cta.call} textLabel={dict.cta.text} bookLabel={dict.cta.book} bookHref={pageHref(locale, "contact")} />
       <DemoBadge label={biz ? `Pregled za ${biz.shortName} · Scale by Noon` : dict.demoPill} dismiss={dict.dismiss} />
     </>
   );

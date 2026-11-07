@@ -26,6 +26,12 @@
   (*69 on the live demo only because it is deliberately noindexed; 100 with NEXT_PUBLIC_NOINDEX=false.)
   Other mobile pages: listings 88, listing detail 86, neighbourhood guide 86. Desktop home: 100 / 100 / 100. CLS 0.
 
+## Phone pass (7 Nov 2026)
+- Below 768 px or on touch (the `phone:` CSS variant, `lib/phone.ts`): own hero crop and first screen (service + town, agent, rating, call button with the number, search), bar Call + Text, order listings → experience + reviews → team → how we work → map/guides → valuation → contact (footer). Order is CSS only, desktop DOM is unchanged.
+- GSAP and Lenis load only off phones (`lib/motion.ts`: `useDeskMotion`, `loadGsap`). Phones get `layout/PhoneMotion` (one fade-and-rise per section, self-drawing level lines). Links don't prefetch on phones (`ui/SiteLink`).
+- Fonts on phones: `public/fonts/` only (Source Serif 500 + a Hanken subset, 40 KB); labels use the sans and accents stay upright. Desktop keeps Plex Mono and the italic.
+- Map/price data lives in `content/hood-geo.ts`, so neighbourhood guide copy stays off the client.
+
 ## Portfolio copy
 EN title: Kota — boutique real estate in Novi Sad
 EN one-liner (≤ 120 chars): A bilingual agency site where every home is measured: map search, floor plans, valuations and viewing booking.

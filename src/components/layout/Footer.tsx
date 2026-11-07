@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { Mark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { DimLine } from "@/components/ui/Reveal";
@@ -19,8 +19,8 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
 
   return (
     <footer className="theme-dark relative overflow-hidden" data-header="dark">
-      <div className="wrap pb-10 pt-24 md:pt-32">
-        <div className="grid gap-10 border-b border-line pb-16 md:grid-cols-[1.4fr_1fr] md:items-end">
+      <div className="wrap pb-10 pt-24 md:pt-32 phone:pb-6 phone:pt-10">
+        <div className="grid gap-10 border-b border-line pb-16 md:grid-cols-[1.4fr_1fr] md:items-end phone:grid-cols-1! phone:items-start! phone:gap-5 phone:pb-7">
           <p className="t-h1 max-w-[12ch]">
             {locale === "sr" ? (
               <>
@@ -32,20 +32,22 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
               </>
             )}
           </p>
-          <div className="flex flex-wrap gap-3 md:justify-end">
+          <div className="flex flex-wrap gap-3 md:justify-end phone:justify-start! phone:gap-2">
             <Button href={pageHref(locale, "contact")} variant="brass">
               {dict.cta.book}
             </Button>
-            <Button href={`tel:${biz ? biz.phone : site.phone}`} variant="outline">
-              {biz ? biz.phoneDisplay : site.phoneDisplay}
-            </Button>
+            {(biz ? biz.phone : site.phone) && (
+              <Button href={`tel:${biz ? biz.phone : site.phone}`} variant="outline">
+                {biz ? biz.phoneDisplay : site.phoneDisplay}
+              </Button>
+            )}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-12 py-16 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 py-16 md:grid-cols-4 phone:gap-x-4 phone:gap-y-7 phone:py-7">
           <div>
-            <p className="t-label mb-5 text-muted">{dict.footer.explore}</p>
-            <ul className="grid gap-2.5">
+            <p className="t-label mb-5 text-muted phone:mb-2.5">{dict.footer.explore}</p>
+            <ul className="grid gap-2.5 phone:gap-1.5">
               {explore.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="link-u">
@@ -57,8 +59,8 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
           </div>
           {!biz && (
           <div>
-            <p className="t-label mb-5 text-muted">{dict.nav.hoods}</p>
-            <ul className="grid gap-2.5">
+            <p className="t-label mb-5 text-muted phone:mb-2.5">{dict.nav.hoods}</p>
+            <ul className="grid gap-2.5 phone:gap-1.5">
               {guidedHoods.map((h) => (
                 <li key={h.id}>
                   <Link href={detailHref(locale, "hoods", h.slug!)} className="link-u">
@@ -70,7 +72,7 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
           </div>
           )}
           <div>
-            <p className="t-label mb-5 text-muted">{dict.footer.visit}</p>
+            <p className="t-label mb-5 text-muted phone:mb-2.5">{dict.footer.visit}</p>
             <address className="not-italic leading-relaxed">
               {biz ? (
                 <>
@@ -91,7 +93,7 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
             <OpenStatus dict={dict} className="mt-5" />
           </div>
           <div>
-            <p className="t-label mb-5 text-muted">{dict.hoursLabel}</p>
+            <p className="t-label mb-5 text-muted phone:mb-2.5">{dict.hoursLabel}</p>
             <dl className="t-mono grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
               {biz
                 ? weekFromMonday(biz.hours ?? []).map((h) => (
@@ -140,7 +142,7 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-muted md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-muted md:flex-row md:items-center md:justify-between phone:mt-6 phone:gap-2 phone:pt-4">
           <p>
             {biz
               ? `© ${year} ${biz.name}. Pregled početne strane napravljen za ${biz.name}.`

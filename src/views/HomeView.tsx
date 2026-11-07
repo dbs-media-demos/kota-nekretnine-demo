@@ -13,7 +13,7 @@ import { guidedHoods, type HoodId } from "@/content/neighbourhoods";
 import { getDictionary } from "@/i18n/dictionary";
 import type { Locale } from "@/lib/i18n";
 import { detailHref, pageHref } from "@/lib/routes";
-import { priceLabel } from "@/components/listings/ListingCard";
+import { ListingCard, priceLabel } from "@/components/listings/ListingCard";
 import { PreviewMap } from "@/components/preview/PreviewMap";
 import type { Biz } from "@/lib/biz-core";
 import type { Listing } from "@/content/listings";
@@ -41,60 +41,82 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
   const guideHrefs = Object.fromEntries(guidedHoods.map((h) => [h.id, detailHref(locale, "hoods", h.slug!)])) as Partial<Record<HoodId, string>>;
 
   return (
-    <>
-      <HomeHero locale={locale} dict={dict} biz={biz} />
-      <Elevator locale={locale} />
-      <FeaturedRail
-        locale={locale}
-        dict={dict}
-        items={featured}
-        label={biz ? "Primeri oglasa" : c.featuredLabel[locale]}
-        title={c.featuredTitle[locale]}
-        allLabel={biz ? "Pogledajte sve nekretnine" : c.featuredAll[locale]}
-        allHref={pageHref(locale, "listings")}
-        place={biz?.area}
-      />
-      <Manifesto locale={locale} biz={biz} />
-      {biz && <PreviewMap biz={biz} dict={dict} />}
+    // Phones read in a real-estate order (listings, experience + reviews, how we work, tools); desktop keeps the DOM order.
+    <div className="phone:flex phone:flex-col">
+      <div className="phone:order-1">
+        <HomeHero locale={locale} dict={dict} biz={biz} />
+      </div>
+      <div className="phone:order-6">
+        <Elevator locale={locale} />
+      </div>
+      <div className="phone:order-2">
+        <FeaturedRail label={biz ? "Primeri oglasa" : c.featuredLabel[locale]} title={c.featuredTitle[locale]} allLabel={biz ? "Pogledajte sve nekretnine" : c.featuredAll[locale]} allHref={pageHref(locale, "listings")}>
+          {featured.map((l, i) => (
+            <div key={l.id} data-card className="w-[78vw] shrink-0 snap-start sm:w-[44vw] lg:w-[24vw] phone:row-start-2 phone:w-auto!">
+              <ListingCard listing={l} locale={locale} dict={dict} sizes="(min-width: 1024px) 24vw, (min-width: 768px) 44vw, 66vw" priority={false} morph={i < 6} place={biz?.area} />
+            </div>
+          ))}
+        </FeaturedRail>
+      </div>
+      <div className="phone:order-3">
+        <Manifesto locale={locale} biz={biz} />
+      </div>
+      {biz && (
+        <div className="phone:order-7">
+          <PreviewMap biz={biz} dict={dict} />
+        </div>
+      )}
       {!biz && (
         <>
-      <MapTeaser
-        locale={locale}
-        label={c.mapLabel[locale]}
-        title={c.mapTitle[locale]}
-        lead={c.mapLead[locale]}
-        guideLabel={c.guide[locale]}
-        pins={pins}
-        guideHrefs={guideHrefs}
-        listingsHref={pageHref(locale, "listings")}
-      />
-      <HoodPanels locale={locale} label={c.hoodsLabel[locale]} title={c.hoodsTitle[locale]} />
-      <ValuationTeaser
-        locale={locale}
-        href={pageHref(locale, "valuation")}
-        photoAlt={listingById("l10")!.photos[1][locale]}
-        copy={{
-          label: c.valLabel[locale],
-          title: c.valTitle[locale],
-          lead: c.valLead[locale],
-          area: c.valArea[locale],
-          hood: c.valHood[locale],
-          range: c.valRange[locale],
-          cta: c.valCta[locale],
-        }}
-      />
+          <div className="phone:order-7">
+            <MapTeaser
+              locale={locale}
+              label={c.mapLabel[locale]}
+              title={c.mapTitle[locale]}
+              lead={c.mapLead[locale]}
+              guideLabel={c.guide[locale]}
+              pins={pins}
+              guideHrefs={guideHrefs}
+              listingsHref={pageHref(locale, "listings")}
+            />
+          </div>
+          <div className="phone:order-8">
+            <HoodPanels locale={locale} label={c.hoodsLabel[locale]} title={c.hoodsTitle[locale]} />
+          </div>
+          <div className="phone:order-9">
+            <ValuationTeaser
+              locale={locale}
+              href={pageHref(locale, "valuation")}
+              photoAlt={listingById("l10")!.photos[1][locale]}
+              copy={{
+                label: c.valLabel[locale],
+                title: c.valTitle[locale],
+                lead: c.valLead[locale],
+                area: c.valArea[locale],
+                hood: c.valHood[locale],
+                range: c.valRange[locale],
+                cta: c.valCta[locale],
+              }}
+            />
+          </div>
         </>
       )}
-      <ReviewsMarquee
-        locale={locale}
-        dict={dict}
-        label={c.reviewsLabel[locale]}
-        title={c.reviewsTitle[locale]}
-        allLabel={c.reviewsAll[locale]}
-        allHref={pageHref(locale, "reviews")}
-        biz={biz}
-      />
-      {!biz && <TeamStrip locale={locale} label={c.teamLabel[locale]} title={c.teamTitle[locale]} allLabel={c.teamAll[locale]} allHref={pageHref(locale, "about")} />}
-    </>
+      <div className="phone:order-4">
+        <ReviewsMarquee
+          locale={locale}
+          dict={dict}
+          label={c.reviewsLabel[locale]}
+          title={c.reviewsTitle[locale]}
+          allLabel={c.reviewsAll[locale]}
+          allHref={pageHref(locale, "reviews")}
+          biz={biz}
+        />
+      </div>
+      {!biz && (
+        <div className="phone:order-5">
+          <TeamStrip locale={locale} label={c.teamLabel[locale]} title={c.teamTitle[locale]} allLabel={c.teamAll[locale]} allHref={pageHref(locale, "about")} />
+        </div>
+      )}
+    </div>
   );
 }

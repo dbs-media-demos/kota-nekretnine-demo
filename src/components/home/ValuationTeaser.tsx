@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { hoods, type HoodId } from "@/content/neighbourhoods";
+import { hoodGeo as hoods, type HoodId } from "@/content/hood-geo";
 import type { Locale } from "@/lib/i18n";
 import { estimate } from "@/lib/valuation";
 import { eur } from "@/lib/format";
@@ -28,25 +28,25 @@ export function ValuationTeaser({ locale, copy, href, photoAlt }: Props) {
   const high = useAnimatedNumber(est.high);
 
   return (
-    <section className="theme-light py-24 md:py-36" data-header="light" aria-labelledby="val-title">
-      <div className="wrap grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
+    <section className="theme-light py-24 md:py-36 phone:py-9" data-header="light" aria-labelledby="val-title">
+      <div className="wrap grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20 phone:grid-cols-1! phone:gap-4!">
         <div className="relative">
-          <Parallax className="aspect-[4/5] w-full" amount={14}>
+          <Parallax className="aspect-[4/5] w-full phone:aspect-[2/1]" amount={14}>
             <div className="absolute inset-0">
               <Image src="/images/listings/l10/02.jpg" alt={photoAlt} fill sizes="(min-width: 1024px) 45vw, 92vw" quality={70} className="object-cover" />
             </div>
           </Parallax>
-          <DimLine label="7.00 m" className="mt-3 text-muted" />
+          <DimLine label="7.00 m" className="mt-3 text-muted phone:mt-2" />
         </div>
         <div>
           <p className="t-label text-accent">▽ {copy.label}</p>
-          <h2 id="val-title" className="t-h1 mt-5 max-w-[12ch]">
+          <h2 id="val-title" className="t-h1 mt-5 max-w-[12ch] phone:mt-2 phone:max-w-none">
             {copy.title}
           </h2>
-          <p className="t-lead mt-6 max-w-[44ch] text-muted">{copy.lead}</p>
+          <p className="t-lead mt-6 max-w-[44ch] text-muted phone:mt-2">{copy.lead}</p>
 
           <form
-            className="mt-10 grid gap-6 sm:grid-cols-2"
+            className="mt-10 grid gap-6 sm:grid-cols-2 phone:mt-3 phone:grid-cols-2 phone:gap-x-4 phone:gap-y-4"
             action={href}
             method="get"
           >
@@ -73,14 +73,14 @@ export function ValuationTeaser({ locale, copy, href, photoAlt }: Props) {
                 className="field t-mono text-lg"
               />
             </label>
-            <div className="border-t border-line pt-6 sm:col-span-2">
+            <div className="col-span-1 border-t border-line pt-6 sm:col-span-2 phone:col-span-2 phone:pt-4">
               <p className="t-label text-muted">{copy.range}</p>
-              <p className="t-mono mt-3 text-[clamp(1.8rem,3.6vw,3rem)] leading-none tracking-[-0.03em]" aria-live="polite">
+              <p className="t-mono mt-3 text-[clamp(1.8rem,3.6vw,3rem)] leading-none tracking-[-0.03em] phone:mt-2 phone:text-[1.6rem] phone:whitespace-nowrap" aria-live="polite">
                 {eur(low, locale)} – {eur(high, locale)}
               </p>
               <p className="t-mono mt-2 text-sm text-muted">≈ {eur(est.perM2, locale)}/m²</p>
             </div>
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 phone:col-span-2">
               <button type="submit" className="group inline-flex min-h-12 items-center gap-3 rounded-full bg-dunav px-6 font-medium text-kamen transition-colors hover:bg-mesing hover:text-dunav">
                 {copy.cta} <span className="transition-transform group-hover:translate-x-1">→</span>
               </button>

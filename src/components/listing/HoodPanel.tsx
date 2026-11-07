@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import type { Listing } from "@/content/listings";
 import { hoodById, landmarks, walkMinutes } from "@/content/neighbourhoods";
 import type { Locale } from "@/lib/i18n";

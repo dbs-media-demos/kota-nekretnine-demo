@@ -2,7 +2,7 @@
 
 import { useRef, type CSSProperties, type ElementType, type ReactNode } from "react";
 import clsx from "clsx";
-import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion, loadSplitText } from "@/lib/gsap";
+import { prefersReducedMotion, useDeskMotion } from "@/lib/motion";
 
 /*
  * Scroll-driven reveals.
@@ -29,8 +29,8 @@ type SplitProps = {
 export function SplitReveal({ children, as: Tag = "h2", className, delay = 0, immediate, stagger = 0.09, id }: SplitProps) {
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
+  useDeskMotion(
+    ({ gsap, loadSplitText }) => {
       const el = ref.current;
       if (!el || immediate || prefersReducedMotion() || !belowFold(el)) return;
       gsap.set(el, { opacity: 0 });
@@ -87,8 +87,8 @@ type RevealProps = {
 export function Reveal({ children, as: Tag = "div", className, delay = 0, y = 36, stagger, immediate, id }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
+  useDeskMotion(
+    ({ gsap, ScrollTrigger }) => {
       const el = ref.current;
       if (!el || immediate || prefersReducedMotion() || !belowFold(el)) return;
       const targets = stagger ? Array.from(el.children) : [el];
@@ -115,8 +115,8 @@ export function Reveal({ children, as: Tag = "div", className, delay = 0, y = 36
 export function ScrubWords({ text, className, as: Tag = "p" }: { text: string; className?: string; as?: ElementType }) {
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
+  useDeskMotion(
+    ({ gsap }) => {
       const el = ref.current;
       if (!el || prefersReducedMotion()) return;
       const words = el.querySelectorAll<HTMLElement>("[data-w]");
@@ -157,8 +157,8 @@ export function Parallax({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
+  useDeskMotion(
+    ({ gsap }) => {
       const el = ref.current;
       const inner = el?.firstElementChild as HTMLElement | null;
       if (!el || !inner || prefersReducedMotion()) return;
@@ -190,8 +190,8 @@ export function Parallax({
 export function DimLine({ label, className, vertical }: { label: string; className?: string; vertical?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
+  useDeskMotion(
+    ({ gsap, ScrollTrigger }) => {
       const el = ref.current;
       if (!el || prefersReducedMotion() || !belowFold(el)) return;
       const lines = el.querySelectorAll("[data-l]");
@@ -225,7 +225,7 @@ export function DimLine({ label, className, vertical }: { label: string; classNa
     );
   }
   return (
-    <div ref={ref} className={clsx("flex items-center gap-2 text-current", className)} aria-hidden="true">
+    <div ref={ref} data-draw className={clsx("flex items-center gap-2 text-current", className)} aria-hidden="true">
       <span className="h-2.5 w-px bg-current" />
       <span data-l className="h-px flex-1 origin-right bg-current opacity-50" />
       <span data-t className="t-label whitespace-nowrap">
@@ -257,8 +257,8 @@ export function Counter({
   const fmt = (v: number) =>
     new Intl.NumberFormat(locale === "sr" ? "sr-Latn-RS" : "en-GB", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(v);
 
-  useGSAP(
-    () => {
+  useDeskMotion(
+    ({ gsap, ScrollTrigger }) => {
       const el = ref.current;
       if (!el || prefersReducedMotion() || !belowFold(el)) return;
       const obj = { v: 0 };
@@ -287,5 +287,3 @@ export function Counter({
     </span>
   );
 }
-
-export { ScrollTrigger };

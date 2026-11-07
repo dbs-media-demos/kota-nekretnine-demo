@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { fontVariables } from "@/lib/fonts";
 import { Logo, Mark } from "@/components/brand/Logo";
 import { getDictionary } from "@/i18n/dictionary";

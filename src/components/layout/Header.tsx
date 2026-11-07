@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -36,6 +36,7 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
   const [query, setQuery] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   // Which section sits under the header decides its colour; scroll direction decides visibility.
   useEffect(() => {
@@ -60,6 +61,7 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
       if (!raf) raf = requestAnimationFrame(check);
     };
     check();
+    headerRef.current?.setAttribute("data-ready", "");
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     const t = window.setTimeout(check, 300);
@@ -126,12 +128,13 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
   return (
     <>
       <header
+        ref={headerRef}
         style={{ viewTransitionName: "site-header" }}
         className={clsx(
-          "fixed inset-x-0 top-0 z-[200] transition-[transform,background-color,color,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "fixed inset-x-0 top-0 z-[200] transition-[transform,background-color,color,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] phone:duration-200",
           hidden && !open ? "-translate-y-full" : "translate-y-0",
           light ? "text-kamen" : "text-dunav",
-          scrolled && !open && (onDark ? "bg-dunav/70 backdrop-blur-md" : "bg-kreda/80 shadow-[0_1px_0_rgba(19,40,59,0.08)] backdrop-blur-md"),
+          scrolled && !open && (onDark ? "bg-dunav/70 backdrop-blur-md phone:bg-dunav" : "bg-kreda/80 shadow-[0_1px_0_rgba(19,40,59,0.08)] backdrop-blur-md phone:bg-kreda"),
         )}
       >
         <div className="wrap flex h-[var(--header-h)] items-center justify-between gap-6">
@@ -139,7 +142,7 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
             <Logo />
           </Link>
 
-          <nav aria-label="Primary" className="hidden lg:block">
+          <nav aria-label="Primary" className="hidden lg:block phone:hidden!">
             <ul className="flex items-center gap-8">
               {primary.map((l) => {
                 const active = pathname === l.href || pathname.startsWith(l.href + "/");
@@ -165,7 +168,7 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
             <Link
               href={bookHref}
               className={clsx(
-                "hidden h-11 items-center rounded-full px-5 text-[0.9rem] font-medium transition-colors duration-500 md:inline-flex",
+                "hidden h-11 items-center rounded-full px-5 text-[0.9rem] font-medium transition-colors duration-500 md:inline-flex phone:hidden!",
                 light ? "bg-kamen text-dunav hover:bg-mesing" : "bg-dunav text-kamen hover:bg-mesing hover:text-dunav",
               )}
             >

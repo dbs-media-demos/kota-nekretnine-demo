@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Phone width or touch: the simple, fast version. `desk` is the exact opposite. Same tests as lib/phone.ts. */
+@custom-variant phone {
+  @media (max-width: 767.98px), (hover: none) and (pointer: coarse) {
+    @slot;
+  }
+}
+@custom-variant desk {
+  @media (min-width: 768px) and (hover: hover), (min-width: 768px) and (pointer: fine), (min-width: 768px) and (pointer: none) {
+    @slot;
+  }
+}
+
 /* ────────────────────────────────────────────────────────────────
    Kota — design tokens
    Limestone neutrals, Danube navy, one brass accent.
@@ -474,6 +486,153 @@ img {
     opacity: 0;
     transform: translateY(3vh);
   }
+}
+
+/* ─────────────────────── phones ───────────────────────
+   Two font files, smaller type, opaque bars, tap feedback. Lines that say
+   "desktop" elsewhere in this file stay out of here on purpose. */
+
+@font-face {
+  font-family: "Kota Sans";
+  src: url("/fonts/hanken-phone.woff2") format("woff2");
+  font-weight: 400 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Kota Serif";
+  src: url("/fonts/source-serif-phone.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+/* System fonts trimmed to the same metrics, so nothing jumps when the real ones arrive */
+@font-face {
+  font-family: "Kota Sans Fallback";
+  src: local("Arial"), local("Helvetica"), local("Roboto");
+  size-adjust: 101.37%;
+  ascent-override: 98.65%;
+  descent-override: 29.89%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Kota Serif Fallback";
+  src: local("Times New Roman"), local("Times"), local("Noto Serif");
+  size-adjust: 102.28%;
+  ascent-override: 101.29%;
+  descent-override: 32.75%;
+  line-gap-override: 0%;
+}
+
+@media (max-width: 767.98px), (hover: none) and (pointer: coarse) {
+  html:root {
+    --header-h: 3.75rem;
+    --rail-w: min(62vw, 340px);
+    --font-hanken: "Kota Sans", "Kota Sans Fallback";
+    /* Labels and prices share the body font; the ▽ comes from the serif, which has it */
+    --font-plex: "Kota Sans", "Kota Serif", "Kota Sans Fallback";
+    --font-display-serif: "Kota Serif", "Kota Serif Fallback";
+  }
+  /* No third font file: accents keep their brass colour, upright */
+  *,
+  *::before,
+  *::after {
+    font-style: normal !important;
+    backdrop-filter: none !important;
+  }
+  /* Header colour before hydration, over a dark hero */
+  html:has([data-hero-dark]) header:not([data-ready]) {
+    color: var(--kamen);
+  }
+
+  .t-display {
+    font-size: clamp(2.35rem, 11.4vw, 3.4rem);
+    line-height: 1.03;
+    letter-spacing: -0.02em;
+  }
+  .t-h1 {
+    font-size: clamp(1.95rem, 8.8vw, 3rem);
+    line-height: 1.04;
+  }
+  .t-h2 {
+    font-size: clamp(1.45rem, 6.4vw, 2.2rem);
+    line-height: 1.1;
+  }
+  .t-h3 {
+    font-size: 1.3rem;
+  }
+  .t-lead {
+    font-size: 0.98rem;
+    line-height: 1.47;
+  }
+  .t-label {
+    letter-spacing: 0.1em;
+    font-weight: 500;
+  }
+
+  /* Swipe gallery: the next photo half showing, a vertical swipe still scrolls the page */
+  .phone-rail {
+    display: flex;
+    gap: 0.625rem;
+    overflow-x: auto;
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .phone-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .phone-rail > * {
+    flex: 0 0 var(--rail-w);
+    scroll-snap-align: start;
+  }
+  .phone-rail-bleed {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  /* Tap feedback */
+  a,
+  button,
+  select,
+  summary {
+    -webkit-tap-highlight-color: transparent;
+  }
+  a:active,
+  button:active {
+    opacity: 0.72;
+    transition: opacity 0.08s;
+  }
+  a.rounded-full:active,
+  button.rounded-full:active {
+    transform: scale(0.97);
+    transition: transform 0.12s var(--ease-out-expo), opacity 0.08s;
+  }
+}
+
+/* Set by PhoneMotion on what starts below the fold: one fade-and-rise per section, one self-drawing level line */
+.rise {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+}
+.rise-in {
+  transition: opacity 0.6s ease-out, transform 0.7s var(--ease-out-expo);
+}
+.undrawn [data-l] {
+  transform: scaleX(0);
+}
+.undrawn [data-t] {
+  opacity: 0;
+}
+.drawn [data-l] {
+  transition: transform 1s var(--ease-out-expo);
+}
+.drawn [data-t] {
+  transition: opacity 0.5s ease-out 0.35s;
+}
+.shaft.undrawn {
+  transform: scaleY(0);
+}
+.shaft.drawn {
+  transition: transform 0.9s var(--ease-out-expo);
 }
 
 /* ─────────────────────── reduced motion ─────────────────────── */

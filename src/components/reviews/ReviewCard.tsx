@@ -28,13 +28,13 @@ export function GoogleG({ className }: { className?: string }) {
 export function ReviewCard({ review, locale, className }: { review: Review; locale: Locale; className?: string }) {
   const date = new Intl.DateTimeFormat(locale === "sr" ? "sr-Latn-RS" : "en-GB", { month: "long", year: "numeric" }).format(new Date(review.date));
   return (
-    <figure className={clsx("flex h-full flex-col gap-5 border border-line bg-surface p-7", className)}>
+    <figure className={clsx("flex h-full flex-col gap-5 border border-line bg-surface p-7 phone:gap-3 phone:p-5", className)}>
       <div className="flex items-center justify-between">
         <Stars value={review.rating} />
         <GoogleG className="h-5 w-5" />
       </div>
-      <blockquote className="flex-1 text-[1.02rem] leading-relaxed">“{review.text[locale]}”</blockquote>
-      <figcaption className="flex items-end justify-between gap-4 border-t border-line pt-4">
+      <blockquote className="flex-1 text-[1.02rem] leading-relaxed phone:text-[0.98rem] phone:leading-[1.5]">“{review.text[locale]}”</blockquote>
+      <figcaption className="flex items-end justify-between gap-4 border-t border-line pt-4 phone:pt-3">
         <span>
           <span className="block font-medium">{review.name}</span>
           <span className="t-label mt-1 block text-muted">{review.context[locale]}</span>
