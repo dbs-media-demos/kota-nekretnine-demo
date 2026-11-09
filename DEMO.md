@@ -53,6 +53,21 @@
 - Phone, production build, 4x CPU + slow 4G at 375 px: first-load JS 163 KB compressed, three.js 0 bytes, LCP 0.9 s, TBT 99 ms, CLS 0,
   everything ≈ 460 KB. Same at 320 and 430 px, on /en and on a /for/ preview.
 
+## Smooth 3D pass (9 Nov 2026)
+- The hero scene no longer builds in one go when it starts. `createBuildingScene` is async: it builds in idle slices (environment,
+  site, one floor each) behind the still, compiles every shader with `compileAsync` (the PMREM generator's own blur/GGX filters
+  too, via a dry run in `warmEnvironment`), and draws hidden frames (one part of the model per slice, then one with shadows).
+  The canvas fades in and the lift's intro starts only then (`start()`).
+- `lib/three-gate.ts` `perfWatch`: a build slice averaging over 50 ms (a slow processor) stops the build and keeps the still;
+  once on screen, the first 2 s must hold ≥ 45 fps, no frame over 100 ms and ≤ 3 ms of scene work per frame, or the canvas
+  fades back to the still and the renderer is freed. Either way `sessionStorage["kota:3d"] = "still"` keeps stills for the visit.
+  `failIfMajorPerformanceCaveat` plus a software-renderer check keep the still without a real GPU. Pixel ratio capped at 1.5;
+  the loop runs only while the hero is on screen and the tab is visible.
+- Measured on the production build, 1600×900, RTX 5070: at 1x the scene appears ≈ 0.8 s after load (≈ 1.1 s from navigation,
+  same on /en and /for/) with no long task from the 3D (was one of 578 ms) and its first 2 s at full rate. At 4x CPU the build
+  check keeps the still and scrolling stays at 180–217 fps, no frame over 25 ms (with the scene live it was 34 fps, frames to
+  146 ms). Forcing 6x at the moment the scene appears: it faded back to the still 2.0 s later.
+
 ## Portfolio copy
 EN title: Kota — boutique real estate in Novi Sad
 EN one-liner (≤ 120 chars): A bilingual agency site where every home is measured: map search, floor plans, valuations and viewing booking.

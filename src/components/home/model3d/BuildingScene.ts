@@ -4,7 +4,9 @@
  * lights each floor it passes; scrolling separates the floors into an exploded section, each slab
  * carrying its own elevation. Built from primitives only (no model files), rendered on demand.
  *
- * Desktop only: imported dynamically behind lib/three-gate, never from a static import.
+ * Desktop only: imported dynamically behind lib/three-gate, never from a static import. It's built
+ * in slices while the browser is idle, its shaders compiled with `compileAsync` and one frame drawn
+ * while the canvas is still invisible, so nothing compiles or allocates once it's on screen.
  */
 import {
   ACESFilmicToneMapping,
@@ -15,6 +17,7 @@ import {
   CylinderGeometry,
   DirectionalLight,
   Group,
+  HalfFloatType,
   HemisphereLight,
   Material,
   Mesh,
@@ -30,6 +33,7 @@ import {
   SphereGeometry,
   Vector3,
   WebGLRenderer,
+  WebGLRenderTarget,
 } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
@@ -38,6 +42,10 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 export type LabelPos = { x: number; y: number; on: number };
 
 export type BuildingScene = {
+  /** Starts the intro (the lift's climb) and the loop: call when the canvas fades in. */
+  start(): void;
+  /** Stops the loop for good, leaving the last frame on the canvas. */
+  stop(): void;
   setProgress(p: number): void;
   setPointer(x: number, y: number): void;
   setVisible(v: boolean): void;
@@ -54,7 +62,10 @@ type Opts = {
   featured?: number;
   /** Fraction of the canvas width the model sits right of centre */
   shift?: number;
-  onFirstFrame?: () => void;
+  /** Judges the computer (lib/three-gate perfWatch): each build slice's time, then each frame's. */
+  watch?: { slice(ms: number): boolean; frame(gap: number, work: number): void };
+  /** Stops the build between slices */
+  signal?: AbortSignal;
   /** Screen positions of each level's elevation label, and the lift's elevation */
   onFrame?: (labels: LabelPos[], liftKota: number) => void;
 };
@@ -447,10 +458,91 @@ const GAP = 3.3;
 const APART_AT = 0.55;
 /** Share of the scroll the model is held back by, so it stays on screen while it opens */
 const HOLD = 0.6;
+const MAX_DPR = 1.5;
+const dpr = () => Math.min(window.devicePixelRatio || 1, MAX_DPR);
 
-export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): BuildingScene {
-  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance", preserveDrawingBuffer: false });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+/** Waits until the browser is idle, so each slice of the build lands between frames. */
+const idle = (signal?: AbortSignal) =>
+  new Promise<void>((resolve, reject) => {
+    const go = () => (signal?.aborted ? reject(new DOMException("Aborted", "AbortError")) : resolve());
+    if (typeof requestIdleCallback === "function") requestIdleCallback(go, { timeout: 250 });
+    else setTimeout(go, 16);
+  });
+
+/**
+ * Compiles every shader `pmrem.fromScene(room)` will use, without blocking. The room's are compiled
+ * into a render target (as the generator draws it). The generator's own blur and GGX filters are
+ * made inside fromScene and compiled on their first draw (about 200 ms on a cold cache), so a dry
+ * run records them instead of drawing (three r187's `_renderCube`) and they compile here. If three
+ * changes that, the real run simply compiles them itself, as before.
+ */
+async function warmEnvironment(renderer: WebGLRenderer, pmrem: PMREMGenerator, room: Scene) {
+  const eye = new PerspectiveCamera(90, 1, 0.1, 100);
+  const scratch = new WebGLRenderTarget(16, 16, { type: HalfFloatType });
+  renderer.setRenderTarget(scratch);
+  const waits = [renderer.compileAsync(room, eye)];
+  renderer.setRenderTarget(null);
+  await Promise.all(waits);
+  scratch.dispose();
+
+  const gen = pmrem as unknown as { _renderCube?: (target: WebGLRenderTarget, lod: number, m: Material) => void };
+  const draw = gen._renderCube;
+  if (typeof draw !== "function") return;
+  const filters = new Map<Material, WebGLRenderTarget>();
+  gen._renderCube = (target, _lod, m) => void filters.set(m, target);
+  let dry: WebGLRenderTarget | null = null;
+  try {
+    dry = pmrem.fromScene(room, 0.04);
+  } finally {
+    gen._renderCube = draw;
+  }
+  const box = new Mesh(new BoxGeometry(5, 5, 5));
+  for (const [m, target] of filters) {
+    box.material = m;
+    renderer.setRenderTarget(target);
+    waits.push(renderer.compileAsync(box, eye));
+  }
+  renderer.setRenderTarget(null);
+  await Promise.all(waits);
+  box.geometry.dispose();
+  dry.dispose();
+}
+
+/** Software rendering: the still is better. */
+const SOFTWARE = /swiftshader|llvmpipe|softpipe|software|basic render/i;
+
+/**
+ * Builds the scene and gets it ready to show: rejects (and frees everything) when there's no
+ * proper GPU or `signal` aborts. Nothing is visible until the caller fades the canvas in and calls `start()`.
+ */
+export async function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Promise<BuildingScene> {
+  // Throws without a hardware context: the still stays.
+  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance", failIfMajorPerformanceCaveat: true, preserveDrawingBuffer: false });
+  const disposers: (() => void)[] = [];
+  const free = () => {
+    disposers.forEach((f) => f());
+    renderer.dispose();
+    renderer.forceContextLoss();
+  };
+  {
+    const gl = renderer.getContext();
+    const info = gl.getExtension("WEBGL_debug_renderer_info");
+    const name = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+    if (SOFTWARE.test(name)) {
+      free();
+      throw new Error(`No GPU (${name})`);
+    }
+  }
+  const step = async () => {
+    try {
+      await idle(o.signal);
+    } catch (e) {
+      free();
+      throw e;
+    }
+  };
+
+  renderer.setPixelRatio(dpr());
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.92;
@@ -460,9 +552,29 @@ export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Buildin
 
   const scene = new Scene();
   scene.background = BG;
+  disposers.push(() =>
+    scene.traverse((obj) => {
+      if (obj instanceof Mesh) {
+        obj.geometry.dispose();
+        const m = obj.material as MeshStandardMaterial;
+        m.map?.dispose();
+        m.dispose();
+      }
+    }),
+  );
 
+  // Reflections for brass and glass, with every shader compiled in the background first.
+  await step();
+  const room = new RoomEnvironment();
   const pmrem = new PMREMGenerator(renderer);
-  const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  await warmEnvironment(renderer, pmrem, room);
+  await step();
+  const envTex = pmrem.fromScene(room, 0.04).texture;
+  room.dispose();
+  disposers.push(() => {
+    envTex.dispose();
+    pmrem.dispose();
+  });
   scene.environment = envTex;
   scene.environmentIntensity = 0.24;
 
@@ -490,17 +602,33 @@ export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Buildin
   floor.receiveShadow = true;
   scene.add(floor);
 
-  const site = buildSite();
-  site.add(plaque());
-  scene.add(site);
+  // The model itself, a slice at a time. Slices that run long mean a slow processor: stop and keep the still.
+  const timed = async (build: () => void) => {
+    await step();
+    const t = performance.now();
+    build();
+    if (o.watch?.slice(performance.now() - t)) {
+      free();
+      throw new Error("Too slow for live 3D");
+    }
+  };
+  const site = new Group();
+  await timed(() => {
+    site.add(buildSite(), plaque());
+    scene.add(site);
+  });
 
   const ks = o.levels;
-  const levels = ks.map((k, i) => {
-    const top = i === ks.length - 1;
-    const h = top ? 3.0 : ks[i + 1] - k;
-    return buildLevel(k, h, top, i === 0, i === o.featured);
-  });
-  levels.forEach((l) => scene.add(l.group));
+  const levels: Level[] = [];
+  for (let i = 0; i < ks.length; i++) {
+    await timed(() => {
+      const top = i === ks.length - 1;
+      const h = top ? 3.0 : ks[i + 1] - ks[i];
+      const l = buildLevel(ks[i], h, top, i === 0, i === o.featured);
+      levels.push(l);
+      scene.add(l.group);
+    });
+  }
 
   // The lift car: brass frame, lit from inside, riding the glass tower
   const car = new Group();
@@ -535,7 +663,7 @@ export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Buildin
   let raf = 0;
   let last = 0;
   let t0 = -1;
-  let first = true;
+  let running = false;
   let introT = 0;
   const labels: LabelPos[] = levels.map(() => ({ x: 0, y: 0, on: 0 }));
   const v = new Vector3();
@@ -597,8 +725,10 @@ export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Buildin
 
   const tick = (now: number) => {
     raf = 0;
+    const began = performance.now();
     if (t0 < 0) t0 = now;
-    const dt = Math.min(0.05, last ? (now - last) / 1000 : 1 / 60);
+    const gap = last ? now - last : 0;
+    const dt = Math.min(0.05, gap ? gap / 1000 : 1 / 60);
     last = now;
     introT = (now - t0) / 1000;
     const k = 1 - Math.exp(-dt * 5.5);
@@ -607,17 +737,14 @@ export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Buildin
     ptr.x += (ptr.tx - ptr.x) * kp;
     ptr.y += (ptr.ty - ptr.y) * kp;
     render();
-    if (first) {
-      first = false;
-      o.onFirstFrame?.();
-    }
+    o.watch?.frame(gap, performance.now() - began);
     const settled = introT > INTRO_END && Math.abs(smooth(progress / APART_AT) - explode) < 1e-4 && Math.abs(ptr.tx - ptr.x) < 1e-4 && Math.abs(ptr.ty - ptr.y) < 1e-4;
     if (!settled) wake();
     else last = 0;
   };
 
   const wake = () => {
-    if (!raf && visible) raf = requestAnimationFrame(tick);
+    if (!raf && visible && running) raf = requestAnimationFrame(tick);
   };
 
   const resize = () => {
@@ -629,10 +756,40 @@ export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Buildin
     wake();
   };
 
+  // Compile every shader without blocking, then draw one frame (shadow map included) while the
+  // canvas is still invisible: the first frame the visitor sees costs no more than any other.
+  await step();
   resize();
-  wake();
+  try {
+    await renderer.compileAsync(scene, camera);
+  } catch {}
+  // Hidden frames: one part of the model per slice, so its buffers upload without a long task (only
+  // meshes are hidden, never lights, so no shader changes), then the whole frame with its shadows.
+  const parts = [site, ...levels.map((l) => l.group), car];
+  const show = (part: Group | null) => parts.forEach((p) => p.traverse((m) => m instanceof Mesh && (m.visible = !part || p === part)));
+  renderer.shadowMap.autoUpdate = false;
+  for (const part of parts) {
+    await step();
+    show(part);
+    render();
+  }
+  show(null);
+  renderer.shadowMap.autoUpdate = true;
+  await step();
+  render();
 
   return {
+    start() {
+      if (running) return;
+      running = true;
+      last = 0;
+      wake();
+    },
+    stop() {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    },
     setProgress(p) {
       progress = clamp01(p);
       wake();
@@ -663,25 +820,16 @@ export function createBuildingScene(canvas: HTMLCanvasElement, o: Opts): Buildin
       placeCamera(ex, 0, 0, zoom, lift, turn);
       renderer.render(scene, camera);
       const url = canvas.toDataURL("image/png");
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.setPixelRatio(dpr());
       shift = o.shift ?? 0.19;
       resize();
       return url;
     },
     dispose() {
+      running = false;
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
-      scene.traverse((obj) => {
-        if (obj instanceof Mesh) {
-          obj.geometry.dispose();
-          const m = obj.material as MeshStandardMaterial;
-          m.map?.dispose();
-          m.dispose();
-        }
-      });
-      envTex.dispose();
-      pmrem.dispose();
-      renderer.dispose();
+      free();
     },
   };
 }
