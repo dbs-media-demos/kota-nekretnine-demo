@@ -6,7 +6,7 @@
 - Live URL: https://kota-nekretnine-demo.vercel.app
 - Repo: https://github.com/dbs-media-demos/kota-nekretnine-demo (public, branch main)
 - Folder: DBS Media Portfolio/Demo Websites/real-estate
-- Stack: Next.js 16.3.6, React 19.2.8, Tailwind v4, GSAP 3 (ScrollTrigger, SplitText, Flip), Lenis
+- Stack: Next.js 16.3.6, React 19.2.8, Tailwind v4, GSAP 3 (ScrollTrigger, SplitText, Flip), Lenis, three.js r187 (desktop hero only)
 - Palette: #F8F5F0 Kreda, #EEE8DF Kamen, #D8CEBF Peščar, #B8915A Mesing (#7C5E2F brass text), #2E5470 Reka, #13283B Dunav
   Fonts: Source Serif 4 (display serif: static opsz-60 / weight-500 cut + italic, self-hosted, subset to Latin + Serbian Latin, ~23 KB each),
   Hanken Grotesk, IBM Plex Mono. Source Serif 4 replaced Bodoni Moda on 2026-10-07 because Bodoni's hairlines were too thin.
@@ -14,6 +14,10 @@
   Početna/Home, Nekretnine/Listings (+17 listing pages), Kraj po kraj/Neighbourhoods (+6 guides), Procena/Valuation,
   Prodajte sa nama/Sell with us, O nama/About, Utisci/Reviews, Česta pitanja/FAQ, Kontakt/Contact, Privatnost/Privacy
 - Signature features:
+  - 3D hero (desktop): an architect's model of a five-level building on a walnut model board, cut open at the front. A brass glass lift rides
+    ±0.00 → +12.40 in the first seconds and switches each floor's lights on; the +9.60 floor (brass fascia, warmest light) is the featured
+    listing in the card beside it (l08, 3rd floor = 3 × 3.20). Scrolling separates the floors into an exploded section, each slab carrying
+    its elevation as real text; the cursor leans the camera
   - "Elevator" home scene: a sticky shaft swaps rooms with rising clip reveals while the ▽ elevation readout counts ±0.00 → +12.40
   - Listings search: sale/rent, type, neighbourhood, EUR range slider, m², rooms (0.5–4.0), terasa/parking/lift/uknjiženo;
     URL-synced filters, GSAP Flip result transitions, grid/list/map views with a hand-drawn SVG map of Novi Sad whose ▽ pins sync with hovered cards
@@ -32,6 +36,22 @@
 - Fonts on phones: `public/fonts/` only (Source Serif 500 + a Hanken subset, 40 KB); labels use the sans and accents stay upright. Desktop keeps Plex Mono and the italic.
 - Map/price data lives in `content/hood-geo.ts`, so neighbourhood guide copy stays off the client.
 - Load on phones: Chrome forces one layout as parsing ends, so what's off the first screen comes in on short timers (`.phone-later`, `--later-at`, `--later-h` in `globals.css`), initial load only. Below 768 px the hero's copy does too, top to bottom, so that first layout has no text (the first line set costs about 40 ms) and is under 50 ms at 4x CPU. Hold with `display: none` on children and `min-height` on the box: `content-visibility` reports a false CLS when it ends, and `!important` utilities beat animations. No Intl while hydrating on phones (the first call costs about 50 ms): `eur()` groups digits itself, counters get `text` from the server.
+
+## 3D pass (9 Nov 2026)
+- Why a building cutaway: the brand is the elevation mark, and a sectioned presentation model is what buyers see in a developer's sales
+  office, so the 3D says "real estate, measured" at a glance. The second 3D idea from the audit (an extruded price map) was left out on
+  purpose: the SVG map is already interactive, linked and fast, and one 3D idea per page reads stronger.
+- `components/home/model3d/BuildingScene.ts`: built from primitives only (no model files, no licences), merged per material, PCF soft
+  shadows from a low evening sun, RoomEnvironment reflections for brass and glass. Renders on demand and stops off screen.
+- `components/home/HeroModel.tsx` + `lib/three-gate.ts`: three.js is imported only after load, inside the gate (≥1024 px, hover + fine
+  pointer, no reduced motion, no Save-Data, WebGL2). The canvas fades in over a still rendered from the same scene, which stays as the
+  fallback. Phones, tablets and reduced motion download zero bytes of three.js (checked on the production build).
+- Stills: `public/images/3d/hero-model.jpg` (desktop/fallback, first frame, 2400×1200) and `hero-model-phone.jpg` (lights on, floors
+  slightly apart, 1260×875). To re-render after changing the scene: set `window.__kotaStill = true` before load, then call
+  `window.__kota3d.snapshot({ width, height, intro, explode, shift, zoom, lift })`; the phone still used
+  `{ width: 1260, height: 875, intro: 9, explode: 0.25, shift: 0.2, zoom: 0.72, lift: 2.8 }`, the desktop one `{ width: 2400, height: 1200, intro: 0 }`.
+- Phone, production build, 4x CPU + slow 4G at 375 px: first-load JS 163 KB compressed, three.js 0 bytes, LCP 0.9 s, TBT 99 ms, CLS 0,
+  everything ≈ 460 KB. Same at 320 and 430 px, on /en and on a /for/ preview.
 
 ## Portfolio copy
 EN title: Kota — boutique real estate in Novi Sad

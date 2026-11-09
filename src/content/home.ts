@@ -19,7 +19,16 @@ export const homeCopy = {
     "Flats and houses in Novi Sad, measured to the centimetre, with checked paperwork and an honest price per square metre.",
   ),
   heroScroll: L("Skrolujte, penjemo se", "Scroll, we're going up"),
-  heroPhoto: L("Stari grad u zalazak sunca, pogled na katedralu", "The Old Town at sunset, looking towards the cathedral"),
+  /** The hero model's levels: elevation in metres and a name, ground first. */
+  heroLevels: [
+    { kota: 0, name: L("Prizemlje", "Ground floor") },
+    { kota: 3.2, name: L("1. sprat", "1st floor") },
+    { kota: 6.4, name: L("2. sprat", "2nd floor") },
+    { kota: 9.6, name: L("Na prodaju", "For sale") },
+    { kota: 12.4, name: L("Penthaus", "Penthouse") },
+  ],
+  heroFeatured: L("Izdvojeno iz ponude", "Featured listing"),
+  heroModel: L("Maketa zgrade presečena po spratovima", "Model of a building cut open floor by floor"),
   quickSearch: L("Brza pretraga", "Quick search"),
   anyHood: L("Ceo grad", "Whole city"),
   search: L("Traži", "Search"),
