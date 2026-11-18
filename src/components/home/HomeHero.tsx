@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { PhoneIcon } from "@/components/ui/PhoneIcon";
 import { agents } from "@/content/agents";
 import { homeCopy as c } from "@/content/home";
-import { coverSrc, listingById, listingKota } from "@/content/listings";
+import { coverSrc, listingById, listingKota, photoSrc } from "@/content/listings";
 import { hoods } from "@/content/neighbourhoods";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { Locale } from "@/lib/i18n";
@@ -18,6 +18,13 @@ import { DESK_MEDIA, PHONE_MEDIA } from "@/lib/phone";
 import { site } from "@/lib/site";
 import type { Biz } from "@/lib/biz-core";
 import { HeroModel } from "./HeroModel";
+import { HeroDrawing } from "./HeroDrawing";
+
+/** `/` has the live 3D model; `/v2` the same building as a self-drawing architect's elevation, no WebGL. */
+export type HeroKind = "3d" | "drawing";
+
+/** A 1×1 transparent GIF: the desktop "source" of the /v2 picture, so a desktop never fetches the phone still. */
+const BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 const d = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
 
@@ -35,7 +42,8 @@ const FEATURED_ID = "l08";
  * Phones get their own crop of a still rendered from the same scene and their own first screen
  * (service + town, agent, rating, the number to call), with nothing faded in. Zero three.js.
  */
-export function HomeHero({ locale, dict, biz }: { locale: Locale; dict: Dictionary; biz?: Biz }) {
+export function HomeHero({ locale, dict, biz, hero = "3d" }: { locale: Locale; dict: Dictionary; biz?: Biz; hero?: HeroKind }) {
+  const flat = hero === "drawing";
   const ticks = [0, 3.2, 6.4, 9.6, 12.4];
   const alt = c.heroModel[locale];
   const levels = c.heroLevels.map((l) => l.kota);
@@ -47,7 +55,8 @@ export function HomeHero({ locale, dict, biz }: { locale: Locale; dict: Dictiona
   const phone = biz ? { tel: biz.phone, display: biz.phoneDisplay } : { tel: site.phone, display: site.phoneDisplay };
 
   const { props: photo } = getImageProps({
-    src: "/images/3d/hero-model.jpg",
+    // /v2 never shows the 3D still on a desktop: its <img> is only the phone still's fallback
+    src: flat ? "/images/3d/hero-model-phone.jpg" : "/images/3d/hero-model.jpg",
     alt,
     fill: true,
     quality: 75,
@@ -68,19 +77,31 @@ export function HomeHero({ locale, dict, biz }: { locale: Locale; dict: Dictiona
     sizes: "130vw",
   });
   // Only the photo this screen will show is fetched early.
-  preload(photo.src, { as: "image", imageSrcSet: photo.srcSet, imageSizes: "100vw", media: DESK_MEDIA, fetchPriority: "high" });
+  if (!flat) preload(photo.src, { as: "image", imageSrcSet: photo.srcSet, imageSizes: "100vw", media: DESK_MEDIA, fetchPriority: "high" });
   preload(phoneSrc, { as: "image", imageSrcSet: phoneSrcSet, imageSizes: "130vw", media: PHONE_MEDIA, fetchPriority: "high" });
 
   return (
     <section data-header="dark" data-hero-dark className={clsx("group/hero theme-dark relative h-[100svh] min-h-[660px] overflow-hidden phone:h-auto phone:min-h-0 phone:[--hero-top:clamp(5.25rem,calc(100svh-39rem),11rem)]", biz ? "phone:[--later-h:calc(var(--hero-top)+395.6px)]" : "phone:[--later-h:calc(var(--hero-top)+451.6px)]")} aria-labelledby="hero-title">
-      <div className="anim-mask absolute inset-0 phone:bottom-auto phone:h-[calc(var(--hero-top)+9.5rem)] phone:animate-none!" style={d(0)}>
+      <div className={clsx("anim-mask absolute inset-0 phone:bottom-auto phone:h-[calc(var(--hero-top)+9.5rem)] phone:animate-none!", flat && "desk:hidden")} style={d(0)}>
         <picture>
           <source media={PHONE_MEDIA} srcSet={phoneSrcSet} sizes="130vw" />
+          {flat && <source media={DESK_MEDIA} srcSet={BLANK} />}
           {/* eslint-disable-next-line jsx-a11y/alt-text -- getImageProps supplies src and alt */}
           <img {...photo} />
         </picture>
       </div>
-      <HeroModel levels={levels} names={c.heroLevels.map((l) => l.name[locale])} featured={featuredLevel} />
+      {flat ? (
+        <HeroDrawing
+          levels={levels}
+          names={c.heroLevels.map((l) => l.name[locale])}
+          // 3 × 3.2 is 9.600000000000001, so match the level within a centimetre (`/` keeps its indexOf as it was)
+          featured={levels.findIndex((k) => Math.abs(k - listingKota(featured)) < 0.01)}
+          photo={photoSrc(featured, 1)}
+          href={detailHref(locale, "listings", featured.slug)}
+        />
+      ) : (
+        <HeroModel levels={levels} names={c.heroLevels.map((l) => l.name[locale])} featured={featuredLevel} />
+      )}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,29,43,0.55)_0%,rgba(13,29,43,0.05)_32%,rgba(13,29,43,0.2)_55%,rgba(13,29,43,0.88)_100%)] md:bg-[linear-gradient(90deg,rgba(13,29,43,0.78)_0%,rgba(13,29,43,0.4)_34%,rgba(13,29,43,0)_56%),linear-gradient(180deg,rgba(13,29,43,0.55)_0%,rgba(13,29,43,0)_20%,rgba(13,29,43,0)_78%,rgba(13,29,43,0.7)_100%)] phone:bottom-auto phone:h-[calc(var(--hero-top)+9.5rem)] phone:bg-[linear-gradient(180deg,rgba(13,29,43,0.5)_0%,rgba(13,29,43,0.02)_30%,rgba(19,40,59,0.55)_68%,var(--dunav)_100%)]" />
 
       {/* Elevation ruler */}
@@ -212,6 +233,7 @@ export function HomeHero({ locale, dict, biz }: { locale: Locale; dict: Dictiona
       {/* The listing lit on the model's third floor */}
       <a
         href={detailHref(locale, "listings", featured.slug)}
+        data-feature-card
         className="group absolute bottom-[5.75rem] right-[var(--gutter)] z-10 hidden w-[25rem] items-stretch gap-4 rounded-[2px] border border-kamen/15 bg-dunav/75 p-2.5 pr-5 text-kamen shadow-[0_1px_2px_rgba(0,0,0,0.25),0_18px_40px_-12px_rgba(0,0,0,0.55)] backdrop-blur-md transition-colors duration-500 hover:border-mesing/60 lg:flex phone:hidden!"
         style={{ opacity: "calc(1 - var(--hero-p, 0) * 2.4)" }}
       >

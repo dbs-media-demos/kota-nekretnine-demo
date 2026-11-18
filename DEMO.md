@@ -68,6 +68,20 @@
   check keeps the still and scrolling stays at 180–217 fps, no frame over 25 ms (with the scene live it was 34 fps, frames to
   146 ms). Forcing 6x at the moment the scene appears: it faded back to the still 2.0 s later.
 
+## Homepage without 3D: /v2 (18 Nov 2026)
+- `/v2`, `/en/v2` and `/for/<token>/v2` are the same homepage (`HomeView hero="drawing"`, one component tree) with the 3D hero
+  swapped for `components/home/HeroDrawing.tsx`: the same five-level building as an architect's elevation in SVG + CSS. Lines draw
+  themselves, a brass lift rides ±0.00 → +12.40 (the ▽ readout follows it) and lights each floor as it passes, and the +9.60 floor
+  (brass fascia) opens onto the real flat for sale (l08). Scroll separates the floors, the cursor leans the sheet, hovering the floor or
+  its card highlights the other. Sections, words, photos and order below the hero are untouched; phones get exactly what `/` gives them.
+- No three.js, R3F or WebGL on /v2 at any width (checked on the production build: 0 three.js files at 1440 px and 320/375/430 px).
+  /v2 is noindex with `/` as canonical; the language switch maps /v2 ↔ /en/v2; it isn't in the sitemap.
+- Speed: the drawing is sent as one HTML string (no hydration of its ~400 nodes on phones, where it's hidden), each floor is its own
+  GPU layer, and the script writes transforms on those layers directly. 4x CPU desktop scroll: ≈ 6 ms a frame, worst 25 ms.
+  Phone /v2 at 375 px, 4x CPU + slow 4G: JS 164 KB, three.js 0, LCP ≈ 0.9 s, CLS 0, TBT 90–170 ms.
+- Known on `/` (left as it was): `listingKota(l08)` is 9.600000000000001, so `levels.indexOf` gives -1 and the 3D model's +9.60
+  floor/tag isn't brass. The drawing matches within a centimetre instead.
+
 ## Portfolio copy
 EN title: Kota — boutique real estate in Novi Sad
 EN one-liner (≤ 120 chars): A bilingual agency site where every home is measured: map search, floor plans, valuations and viewing booking.

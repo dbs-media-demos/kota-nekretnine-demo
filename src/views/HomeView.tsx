@@ -1,4 +1,4 @@
-import { HomeHero } from "@/components/home/HomeHero";
+import { HomeHero, type HeroKind } from "@/components/home/HomeHero";
 import { Elevator } from "@/components/home/Elevator";
 import { FeaturedRail } from "@/components/home/FeaturedRail";
 import { MapTeaser } from "@/components/home/MapTeaser";
@@ -33,8 +33,11 @@ function sampleTitle(l: Listing): string {
  * The homepage. A personalised preview (/for/<token>, Serbian only) passes a real agency: its name,
  * rating, hours and a map of its address replace Kota's; listings become samples in its area, and
  * the Novi Sad map, neighbourhood guides, valuation tool and fictional team step aside.
+ *
+ * `hero` is the only difference between `/` (live 3D model) and `/v2` (the same building as a
+ * self-drawing elevation, no WebGL): every section below is this one tree, so a change lands in both.
  */
-export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
+export function HomeView({ locale, biz, hero = "3d" }: { locale: Locale; biz?: Biz; hero?: HeroKind }) {
   const dict = getDictionary(locale);
   const featured = FEATURED.map((id) => listingById(id)!).map((l) => (biz ? { ...l, title: { sr: sampleTitle(l), en: sampleTitle(l) } } : l));
   const pins = listings.map((l) => ({ id: l.id, at: l.at, label: priceLabel(l, locale, dict), href: detailHref(locale, "listings", l.slug) }));
@@ -44,7 +47,7 @@ export function HomeView({ locale, biz }: { locale: Locale; biz?: Biz }) {
     // Phones read in a real-estate order (listings, experience + reviews, how we work, tools); desktop keeps the DOM order.
     <div className="phone:flex phone:flex-col">
       <div className="phone:order-1">
-        <HomeHero locale={locale} dict={dict} biz={biz} />
+        <HomeHero locale={locale} dict={dict} biz={biz} hero={hero} />
       </div>
       <div className="phone-later phone:order-6 [--later-h:1916.5px] [--later-at:0.7s]">
         <Elevator locale={locale} />
