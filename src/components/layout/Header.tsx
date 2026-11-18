@@ -40,15 +40,26 @@ export function Header({ locale, dict, primary, menu, homeHref, bookHref, altMap
 
   // Which section sits under the header decides its colour; scroll direction decides visibility.
   useEffect(() => {
-    let lastY = window.scrollY;
+    // Hides or shows only after a clear 12 px in one direction since it last changed (or since the
+    // turn): Lenis eases a scroll out in steps of a pixel or less, and comparing each step with the
+    // one before flashed the header in and out over and over.
+    let anchor = window.scrollY;
+    let hid = false;
     let raf = 0;
     const check = () => {
       raf = 0;
       const y = window.scrollY;
       setScrolled(y > 30);
-      setHidden(y > 240 && y > lastY + 2);
-      if (y < lastY - 2) setHidden(false);
-      lastY = y;
+      const dy = y - anchor;
+      if (y <= 240) {
+        hid = false;
+        anchor = y;
+      } else if (hid ? dy > 0 : dy < 0) anchor = y; // still going the same way: follow it to the turn
+      else if (Math.abs(dy) > 12) {
+        hid = dy > 0;
+        anchor = y;
+      }
+      setHidden(hid);
       const probe = 36;
       let dark = false;
       document.querySelectorAll<HTMLElement>("[data-header]").forEach((s) => {

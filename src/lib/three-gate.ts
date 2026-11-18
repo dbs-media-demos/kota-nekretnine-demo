@@ -5,25 +5,35 @@
  * in an effect, and the `import()` happens inside its callback, so phones, tablets, reduced
  * motion and Save-Data never download a byte of it.
  *
- * A scene that can't hold its frame rate (see `frameWatch`) is remembered for the visit, and every
- * scene after it stays a still.
+ * A scene that can't hold its frame rate (see `perfWatch`) keeps the still for that page load, and
+ * every scene after it on the page stays a still. Only two slow page loads in the tab keep the 3D
+ * off for the rest of the visit: one slow start (a refresh's first draws, a hitch while the page was
+ * still loading) used to switch it off for the whole tab, so every refresh got the still.
  */
 export const DESKTOP_3D_QUERY = "(min-width: 1024px) and (hover: hover) and (pointer: fine)";
 
-const SLOW_KEY = "kota:3d";
+/** Slow page loads in this tab so far. The old key ("kota:3d" = "still") no longer counts. */
+const SLOW_KEY = "kota:3d-slow";
+const SLOW_LIMIT = 2;
+
+// This page load ran slow: the scenes after it stay stills too (counted once per load)
+let slowHere = false;
 
 function slowThisVisit() {
+  if (slowHere) return true;
   try {
-    return sessionStorage.getItem(SLOW_KEY) === "still";
+    return Number(sessionStorage.getItem(SLOW_KEY) || 0) >= SLOW_LIMIT;
   } catch {
     return false;
   }
 }
 
-/** This computer can't run the 3D smoothly: stills for the rest of the visit. */
+/** This page load ran the 3D slow: stills for the rest of it, and one more slow load counted for the tab. */
 export function markSlow3D() {
+  if (slowHere) return;
+  slowHere = true;
   try {
-    sessionStorage.setItem(SLOW_KEY, "still");
+    sessionStorage.setItem(SLOW_KEY, String(Number(sessionStorage.getItem(SLOW_KEY) || 0) + 1));
   } catch {}
 }
 
@@ -72,7 +82,10 @@ const MAX_SLICE_MS = 50;
 const WATCH_MS = 2000;
 /** Below this on average, it goes back to the still. */
 const MIN_FPS = 45;
-/** Any single frame longer than this (after the first few) is a visible hitch. */
+/**
+ * A frame longer than this (after the first few) is a hitch. A hitch or two (a font, an image
+ * decode, another tab) isn't a slow computer: the 3rd one is, or one frame over 4x this.
+ */
 const MAX_GAP_MS = 100;
 /**
  * Main-thread time the scene's own frame may take on average while it plays untouched. Scrolling
@@ -80,7 +93,11 @@ const MAX_GAP_MS = 100;
  * the scrolled frames stop fitting a 60 Hz display, whatever the fps looks like at rest.
  */
 const MAX_WORK_MS = 3;
-const WARMUP_FRAMES = 3;
+/**
+ * The first frames after a scene appears pay one-off costs (the GPU's first real draw): on 18 Nov a
+ * refresh's first frame took 371 ms on a PC that then ran over 100 fps. Those frames don't count.
+ */
+const WARMUP_FRAMES = 5;
 
 /**
  * Decides whether a scene stays live on this computer, and remembers a no for the visit.
@@ -96,6 +113,7 @@ export function perfWatch(onSlow: () => void) {
   let time = 0;
   let work = 0;
   let n = 0;
+  let hitches = 0;
   let done = false;
   const fail = () => {
     done = true;
@@ -111,8 +129,8 @@ export function perfWatch(onSlow: () => void) {
       return true;
     },
     frame(gap: number, ms: number) {
-      if (done || ++seen <= WARMUP_FRAMES || gap <= 0) return;
-      if (gap > MAX_GAP_MS) return fail();
+      if (done || gap <= 0 || ++seen <= WARMUP_FRAMES) return;
+      if (gap > MAX_GAP_MS && (++hitches >= 3 || gap > MAX_GAP_MS * 4)) return fail();
       time += gap;
       work += ms;
       n++;
