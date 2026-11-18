@@ -905,7 +905,7 @@ html[data-loader-out] .lead-loader {
 }
 /* A guard: never more than 3 s, whatever happens to the script's timer (its own name: a renamed animation restarts, a re-timed one jumps) */
 html[data-loading] .lead-loader {
-  animation: ll-guard 0.85s var(--ease-in-out-quart) 2.15s forwards;
+  animation: ll-guard 0.8s var(--ease-in-out-quart) 1.95s forwards;
 }
 .lead-loader__in {
   display: grid;
@@ -929,8 +929,8 @@ html[data-loading] .lead-loader {
   stroke-dashoffset: 1;
   fill-opacity: 0;
   animation:
-    ll-draw 0.9s var(--ease-in-out-quart) calc(0.08s + var(--i, 0) * 0.1s) forwards,
-    ll-fill 0.5s ease-out calc(0.72s + var(--i, 0) * 0.06s) forwards;
+    ll-draw 0.8s var(--ease-in-out-quart) calc(0.06s + var(--i, 0) * 0.09s) forwards,
+    ll-fill 0.45s ease-out calc(0.62s + var(--i, 0) * 0.05s) forwards;
 }
 .lead-loader [data-i="1"] { --i: 1; }
 .lead-loader [data-i="2"] { --i: 2; }
@@ -950,7 +950,7 @@ html[data-loading] .lead-loader {
 /* the name wipes in left to right, as the drawing hero's photo does */
 .lead-loader [data-part="word"] {
   clip-path: inset(-30% 100% -40% -4%);
-  animation: ll-word 1.05s var(--ease-out-expo) 0.5s forwards;
+  animation: ll-word 0.95s var(--ease-out-expo) 0.42s forwards;
 }
 /* a brass datum line under it, the architect's ±0.00 */
 .lead-loader__datum {
@@ -960,17 +960,17 @@ html[data-loading] .lead-loader {
   background: var(--mesing);
   transform: scaleX(0);
   transform-origin: left center;
-  animation: ll-datum 1.15s var(--ease-in-out-quart) 0.3s forwards;
+  animation: ll-datum 1.05s var(--ease-in-out-quart) 0.25s forwards;
 }
 .lead-loader__note {
   color: color-mix(in oklab, var(--dunav) 62%, transparent);
   opacity: 0;
-  animation: ll-note 0.7s ease-out 0.95s forwards;
+  animation: ll-note 0.6s ease-out 0.85s forwards;
 }
 /* Leaving: the sheet lifts away like the menu closes, onto the hero */
 html[data-loader-out] .lead-loader {
   pointer-events: none;
-  animation: ll-out 0.85s var(--ease-in-out-quart) forwards;
+  animation: ll-out 0.8s var(--ease-in-out-quart) forwards;
 }
 html[data-loader-out] .lead-loader__in {
   animation: ll-away 0.6s var(--ease-in-out-quart) forwards;

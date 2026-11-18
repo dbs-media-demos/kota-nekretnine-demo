@@ -95,7 +95,7 @@ handoff/desktop-home.png, handoff/desktop-feature.png (listings map view, card �
 
 ## The lead's own logo and towns on /for/ (18 Nov 2026)
 - The CRM may send `logo: { svg }` (mark + word, ink in currentColor) and `areas` (their towns, own first); `Biz.logo` / `Biz.areas`, default null / [].
-- With a logo, the first view of a token in the tab opens on `components/preview/LeadLoader`: limestone sheet, the mark's outlines draw, fill, the name wipes in over a brass ±0.00 line, then the sheet lifts away onto the hero (~2.5 s, never 3 s; reduced motion: 0.6 s then a fade; a click, key or scroll skips it; a reload doesn't show it). Server HTML + inline script, no hydration needed.
+- With a logo, the first view of a token in the tab opens on `components/preview/LeadLoader`: limestone sheet, the mark's outlines draw, fill, the name wipes in over a brass ±0.00 line, then the sheet lifts away onto the hero (~2.3 s, never 3 s; reduced motion: 0.6 s then a fade; a click, key or scroll skips it; a reload doesn't show it). Server HTML + inline script, no hydration needed.
 - While it shows, `html[data-loading]` pauses the hero's CSS intros (globals.css) and `whenLoaderDone` (`lib/loader.ts`, or the `loader:done` window event) holds the 3D lift; the scene still builds behind it.
 - The logo replaces the name in the header (36 px, 32 on phones, follows the header's light/dark ink) and the big footer lockup. Without one, the name as before.
 - Areas: hero corner label (their town + the others instead of Trg slobode and Novi Sad's coordinates), listing cards' places, chips under the preview map's address, a "Gde radimo" footer column. Without areas only `biz.area`.

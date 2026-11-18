@@ -20,16 +20,16 @@ function forLoader(svg: string) {
  * All of it is in the server HTML: the inline script runs before the overlay is parsed, so the first
  * paint is the loader, never the homepage. It decides, starts and ends the loader by itself (no
  * hydration needed). The hold counts from when the drawing really starts (a busy page can start it
- * late), capped at 2.1 s after the script, and the exit takes 0.85 s: ~2.5 s in all, never 3 s.
+ * late), capped at 1.9 s after the script, and the exit takes 0.8 s: ~2.3 s in all, never 3 s.
  * Reduced motion: the finished logo for 0.6 s, then a fade. A click, key or scroll skips it, and a
  * reload in the same tab doesn't show it (sessionStorage per token).
  */
 export function LeadLoader({ token, svg, note }: { token: string; svg: string; note: string }) {
   const script = `(function(){var d=document.documentElement,k=${JSON.stringify(`lead-loader:${token}`)};try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,"1")}catch(e){}
 d.setAttribute("data-loading","");var r=matchMedia("(prefers-reduced-motion: reduce)").matches,o=0,ev=["pointerdown","keydown","wheel","touchstart"],h,c;
-function go(){if(o)return;o=1;clearTimeout(h);clearTimeout(c);removeEventListener("animationstart",st,true);ev.forEach(function(e){removeEventListener(e,go,true)});d.setAttribute("data-loader-out","");d.removeAttribute("data-loading");dispatchEvent(new Event(${JSON.stringify(LOADER_DONE)}));setTimeout(function(){d.removeAttribute("data-loader-out")},r?500:950)}
-function st(e){if(e.animationName!=="ll-rise")return;removeEventListener("animationstart",st,true);clearTimeout(h);h=setTimeout(go,1650)}
-if(r)h=setTimeout(go,600);else{addEventListener("animationstart",st,true);h=setTimeout(go,1650);c=setTimeout(go,2100)}
+function go(){if(o)return;o=1;clearTimeout(h);clearTimeout(c);removeEventListener("animationstart",st,true);ev.forEach(function(e){removeEventListener(e,go,true)});d.setAttribute("data-loader-out","");d.removeAttribute("data-loading");dispatchEvent(new Event(${JSON.stringify(LOADER_DONE)}));setTimeout(function(){d.removeAttribute("data-loader-out")},r?500:900)}
+function st(e){if(e.animationName!=="ll-rise")return;removeEventListener("animationstart",st,true);clearTimeout(h);h=setTimeout(go,1500)}
+if(r)h=setTimeout(go,600);else{addEventListener("animationstart",st,true);h=setTimeout(go,1500);c=setTimeout(go,1900)}
 ev.forEach(function(e){addEventListener(e,go,{capture:true,passive:true})})})()`;
   return (
     <>
