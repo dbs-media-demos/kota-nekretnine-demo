@@ -71,6 +71,16 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
             </ul>
           </div>
           )}
+          {biz && biz.areas.length > 0 && (
+            <div>
+              <p className="t-label mb-5 text-muted phone:mb-2.5">{locale === "sr" ? "Gde radimo" : "Where we work"}</p>
+              <ul className="grid gap-2.5 phone:gap-1.5">
+                {biz.areas.map((a) => (
+                  <li key={a}>{a}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           <div>
             <p className="t-label mb-5 text-muted phone:mb-2.5">{dict.footer.visit}</p>
             <address className="not-italic leading-relaxed">
@@ -129,8 +139,10 @@ export function Footer({ locale, dict, biz }: { locale: Locale; dict: Dictionary
         <div className="relative select-none" aria-hidden="true">
           <DimLine label={biz ? biz.area : "45°15′N · 19°50′E · Novi Sad"} className="mb-4 text-muted" />
           <div className="flex items-end gap-[2vw] leading-none">
-            <Mark className="w-[13vw] max-w-[220px] text-kamen" accent="var(--mesing)" />
-            {biz ? (
+            {!biz?.logo && <Mark className="w-[13vw] max-w-[220px] text-kamen" accent="var(--mesing)" />}
+            {biz?.logo ? (
+              <span className="lead-logo block w-[min(100%,58rem)] text-kamen" dangerouslySetInnerHTML={{ __html: biz.logo.svg }} />
+            ) : biz ? (
               <span className="min-w-0 font-serif text-[clamp(2.6rem,8vw,8rem)] leading-[0.95] tracking-[0.04em] [overflow-wrap:anywhere]">
                 {biz.shortName.toUpperCase()}
               </span>

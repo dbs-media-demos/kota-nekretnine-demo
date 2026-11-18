@@ -120,9 +120,24 @@ export function HomeHero({ locale, dict, biz, hero = "3d" }: { locale: Locale; d
       </div>
 
       <p className="anim-fade t-label absolute right-[var(--gutter)] top-[calc(var(--header-h)+1.5rem)] hidden text-right text-kamen/85 sm:block phone:hidden!" style={d(0.9)}>
-        ▽ <span data-hero-kota>±0.00</span> · Trg slobode
-        <br />
-        45.2551° N · 19.8451° E
+        ▽ <span data-hero-kota>±0.00</span> · {biz ? biz.area : "Trg slobode"}
+        {/* A preview names the towns they work in instead of Novi Sad's coordinates */}
+        {biz ? (
+          biz.areas.filter((a) => a !== biz.area).length > 0 && (
+            <>
+              <br />
+              {biz.areas
+                .filter((a) => a !== biz.area)
+                .slice(0, 3)
+                .join(" · ")}
+            </>
+          )
+        ) : (
+          <>
+            <br />
+            45.2551° N · 19.8451° E
+          </>
+        )}
       </p>
 
       <div className="wrap relative flex h-full flex-col justify-end pb-10 md:pb-14 phone:block phone:h-auto phone:pb-5 phone:pt-[var(--hero-top)]">

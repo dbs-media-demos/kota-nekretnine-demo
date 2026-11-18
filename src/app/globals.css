@@ -862,3 +862,210 @@ img {
     animation-duration: 0s !important;
   }
 }
+
+/* ─────────────── personalised preview: the lead's own logo (loader, header, footer) ───────────────
+   The CRM's SVG: <g data-part="mark"> + <g data-part="word">, ink in currentColor. Its <text> names a font
+   that next/font has hashed away, so the word is set in the display serif here. */
+
+.lead-logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.lead-logo [data-part="word"] text {
+  font-family: var(--font-serif);
+}
+/* Header: sized by height, as wide as its viewBox makes it */
+.lead-logo-h svg {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+}
+
+/* The loader (components/preview/LeadLoader): only while <html> says so, so a reload in the tab never paints it */
+.lead-loader {
+  display: none;
+}
+html[data-loading] {
+  overflow: hidden;
+}
+html[data-loading] .lead-loader,
+html[data-loader-out] .lead-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 390;
+  display: grid;
+  place-items: center;
+  /* the page's own limestone: what the streamed page shows before it, so nothing flashes */
+  color: var(--dunav);
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 56%, var(--kreda), transparent 72%),
+    var(--kamen);
+}
+/* A guard: never more than 3 s, whatever happens to the script's timer (its own name: a renamed animation restarts, a re-timed one jumps) */
+html[data-loading] .lead-loader {
+  animation: ll-guard 0.85s var(--ease-in-out-quart) 2.15s forwards;
+}
+.lead-loader__in {
+  display: grid;
+  justify-items: start;
+  gap: 1.35rem;
+  width: min(64vw, 520px);
+  animation: ll-rise 1.8s var(--ease-out-expo) both;
+}
+@media (max-width: 767.98px) {
+  .lead-loader__in {
+    width: 78vw;
+    gap: 1rem;
+  }
+}
+.lead-loader__logo {
+  width: 100%;
+}
+/* the mark draws its outlines one after another, then fills */
+.lead-loader [data-part="mark"] [data-i] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  fill-opacity: 0;
+  animation:
+    ll-draw 0.9s var(--ease-in-out-quart) calc(0.08s + var(--i, 0) * 0.1s) forwards,
+    ll-fill 0.5s ease-out calc(0.72s + var(--i, 0) * 0.06s) forwards;
+}
+.lead-loader [data-i="1"] { --i: 1; }
+.lead-loader [data-i="2"] { --i: 2; }
+.lead-loader [data-i="3"] { --i: 3; }
+.lead-loader [data-i="4"] { --i: 4; }
+.lead-loader [data-i="5"] { --i: 5; }
+.lead-loader [data-i="6"] { --i: 6; }
+.lead-loader [data-i="7"] { --i: 7; }
+.lead-loader [data-i="8"],
+.lead-loader [data-i="9"],
+.lead-loader [data-i="10"],
+.lead-loader [data-i="11"],
+.lead-loader [data-i="12"],
+.lead-loader [data-i="13"],
+.lead-loader [data-i="14"],
+.lead-loader [data-i="15"] { --i: 8; }
+/* the name wipes in left to right, as the drawing hero's photo does */
+.lead-loader [data-part="word"] {
+  clip-path: inset(-30% 100% -40% -4%);
+  animation: ll-word 1.05s var(--ease-out-expo) 0.5s forwards;
+}
+/* a brass datum line under it, the architect's ±0.00 */
+.lead-loader__datum {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--mesing);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: ll-datum 1.15s var(--ease-in-out-quart) 0.3s forwards;
+}
+.lead-loader__note {
+  color: color-mix(in oklab, var(--dunav) 62%, transparent);
+  opacity: 0;
+  animation: ll-note 0.7s ease-out 0.95s forwards;
+}
+/* Leaving: the sheet lifts away like the menu closes, onto the hero */
+html[data-loader-out] .lead-loader {
+  pointer-events: none;
+  animation: ll-out 0.85s var(--ease-in-out-quart) forwards;
+}
+html[data-loader-out] .lead-loader__in {
+  animation: ll-away 0.6s var(--ease-in-out-quart) forwards;
+}
+@keyframes ll-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes ll-fill {
+  to {
+    fill-opacity: 1;
+  }
+}
+@keyframes ll-word {
+  to {
+    clip-path: inset(-30% -4% -40% -4%);
+  }
+}
+@keyframes ll-datum {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes ll-note {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ll-rise {
+  from {
+    transform: translateY(14px);
+  }
+}
+@keyframes ll-out {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+@keyframes ll-guard {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+@keyframes ll-away {
+  to {
+    opacity: 0;
+    transform: translateY(-5vh);
+  }
+}
+@keyframes ll-fade {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes ll-guard-fade {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* While it shows, the hero's own entrance waits (the 3D lift waits in HeroModel, via whenLoaderDone) */
+html[data-loading]
+  :is(.anim-heading, .anim-fade, .anim-mask, .anim-draw-x, .anim-draw-y, .hero-line > span, .dr-draw, .dr-in, .dr-lit, .dr-lift, .dr-photo, .dr-sheen, .dr-life) {
+  animation-play-state: paused !important;
+}
+
+/* Reduced motion: the finished logo for a moment, then a fade (beats the blanket rule above by specificity) */
+@media (prefers-reduced-motion: reduce) {
+  html .lead-loader [data-part="mark"] [data-i],
+  html .lead-loader [data-part="word"],
+  html .lead-loader .lead-loader__datum,
+  html .lead-loader .lead-loader__note,
+  html .lead-loader .lead-loader__in {
+    animation: none !important;
+    stroke-dashoffset: 0;
+    fill-opacity: 1;
+    clip-path: none;
+    transform: none;
+    opacity: 1;
+  }
+  html[data-loading] .lead-loader {
+    animation: ll-guard-fade 0.45s ease 1.6s forwards !important;
+  }
+  html[data-loader-out] .lead-loader {
+    animation: ll-fade 0.45s ease forwards !important;
+  }
+}

@@ -19,6 +19,14 @@ export function Mark({ className, accent = "currentColor" }: { className?: strin
 
 export function Logo({ className, sub, accent }: { className?: string; sub?: string; accent?: string }) {
   const biz = useBiz();
+  // A preview with the lead's own logo: theirs, in the header's ink (currentColor follows its light/dark states)
+  if (biz.logo)
+    return (
+      <span
+        className={clsx("lead-logo lead-logo-h block h-9 max-w-[19rem] phone:h-8 phone:max-w-[52vw]", className)}
+        dangerouslySetInnerHTML={{ __html: biz.logo.svg }}
+      />
+    );
   return (
     <span className={clsx("inline-flex items-center gap-2.5 leading-none phone:max-w-full", className)}>
       <Mark className="h-[0.95em] w-auto shrink-0" accent={accent ?? "var(--mesing)"} />

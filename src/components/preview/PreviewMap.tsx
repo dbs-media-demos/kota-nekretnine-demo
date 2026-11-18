@@ -17,6 +17,15 @@ export function PreviewMap({ biz, dict }: { biz: Biz; dict: Dictionary }) {
             Vidimo se na <em className="italic-accent">razgledanju.</em>
           </h2>
           {biz.address.full && <p className="t-lead mt-8 phone:mt-3">{biz.address.full}</p>}
+          {biz.areas.length > 0 && (
+            <ul className="mt-6 flex flex-wrap gap-2 phone:mt-3" aria-label="Gde radimo">
+              {biz.areas.map((a) => (
+                <li key={a} className="t-label rounded-full border border-line px-3.5 py-2 !text-[0.66rem]">
+                  ▽ {a}
+                </li>
+              ))}
+            </ul>
+          )}
           <OpenStatus dict={dict} className="mt-6 phone:mt-3" />
           {biz.hours && (
             <dl className="t-mono mt-5 grid max-w-xs grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">

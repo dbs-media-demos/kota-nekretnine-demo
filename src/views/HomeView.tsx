@@ -56,7 +56,7 @@ export function HomeView({ locale, biz, hero = "3d" }: { locale: Locale; biz?: B
         <FeaturedRail label={biz ? "Primeri oglasa" : c.featuredLabel[locale]} title={c.featuredTitle[locale]} allLabel={biz ? "Pogledajte sve nekretnine" : c.featuredAll[locale]} allHref={pageHref(locale, "listings")}>
           {featured.map((l, i) => (
             <div key={l.id} data-card className="w-[78vw] shrink-0 snap-start sm:w-[44vw] lg:w-[24vw] phone:row-start-2 phone:w-auto!">
-              <ListingCard listing={l} locale={locale} dict={dict} sizes="(min-width: 1024px) 24vw, (min-width: 768px) 44vw, 66vw" priority={false} morph={i < 6} place={biz?.area} />
+              <ListingCard listing={l} locale={locale} dict={dict} sizes="(min-width: 1024px) 24vw, (min-width: 768px) 44vw, 66vw" priority={false} morph={i < 6} place={biz ? (biz.areas[i % biz.areas.length] ?? biz.area) : undefined} />
             </div>
           ))}
         </FeaturedRail>

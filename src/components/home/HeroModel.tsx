@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { kota } from "@/lib/format";
 import { after3DGate, perfWatch } from "@/lib/three-gate";
+import { whenLoaderDone } from "@/lib/loader";
 import type { BuildingScene } from "./model3d/BuildingScene";
 
 /**
@@ -113,11 +114,16 @@ export function HeroModel({ levels, names, featured }: { levels: number[]; names
         hero.style.removeProperty("--hero-p");
       });
 
-      // Ready: shaders compiled and a frame already drawn. Fade in and start the lift.
-      setLive(true);
-      hero.setAttribute("data-live-3d", "");
-      sync();
-      s.start();
+      // Ready: shaders compiled and a frame already drawn. Fade in and start the lift, once a
+      // preview's logo loader has gone (it warms up behind it, but its intro is for the visitor).
+      off.push(
+        whenLoaderDone(() => {
+          setLive(true);
+          hero.setAttribute("data-live-3d", "");
+          sync();
+          s.start();
+        }),
+      );
     });
 
     return () => {

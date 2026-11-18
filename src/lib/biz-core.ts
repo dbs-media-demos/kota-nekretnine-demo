@@ -28,6 +28,13 @@ export type Biz = {
   rating: { value: number; count: number } | null;
   /** A personalised preview: other pages say "comes with the full site" */
   preview: boolean;
+  /**
+   * The lead's own logo from the CRM (already sanitised there): `<svg viewBox>` with
+   * `<g data-part="mark">` and `<g data-part="word">`, ink in currentColor. null = none (the name as text).
+   */
+  logo: { svg: string } | null;
+  /** Towns / neighbourhoods they serve, their own first (0–8). [] = only `area`. */
+  areas: string[];
 };
 
 export const telOf = (biz: Pick<Biz, "phone">) => (biz.phone ? `tel:${biz.phone}` : undefined);
@@ -129,8 +136,15 @@ export function bizFromCrm(b: Record<string, unknown> & { address: Biz["address"
     hoursSummary: s(b.hoursSummary),
     rating: (b.rating as Biz["rating"]) ?? null,
     preview: true,
+    logo: logoOf(b.logo),
+    areas: Array.isArray(b.areas) ? [...new Set(b.areas.map((a) => s(a).trim()).filter(Boolean))].slice(0, 8) : [],
   };
 }
+
+const logoOf = (v: unknown): Biz["logo"] => {
+  const svg = v && typeof v === "object" ? (v as { svg?: unknown }).svg : null;
+  return typeof svg === "string" && /^\s*<svg[\s>]/i.test(svg) ? { svg: svg.trim() } : null;
+};
 
 /** "HH:MM" from minutes after midnight (for demos that store hours as minutes) */
 export const hmFromMinutes = (m?: number) => (m == null ? null : `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`);

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BizProvider } from "@/components/preview/BizContext";
 import { PreviewGuard } from "@/components/preview/PreviewGuard";
 import { Translate, translateGateCss } from "@/components/preview/Translate";
+import { LeadLoader } from "@/components/preview/LeadLoader";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { previewBiz } from "@/lib/preview";
 import { srPreview } from "@/i18n/sr-preview";
@@ -19,6 +20,8 @@ export default async function PreviewLayout({ children, params }: { children: Re
   const biz = { ...found, lang: "sr" as const };
   return (
     <BizProvider biz={biz}>
+      {/* First in the body after the skip link: the loader is the first paint, never the homepage */}
+      {biz.logo && <LeadLoader token={token} svg={biz.logo.svg} note={biz.area} />}
       <style>{translateGateCss}</style>
       <Translate dict={srPreview} />
       <SiteChrome locale="sr" biz={biz}>
